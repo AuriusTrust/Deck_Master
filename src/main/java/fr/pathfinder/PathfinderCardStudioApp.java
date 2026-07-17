@@ -5,10 +5,16 @@ import fr.pathfinder.carte.Deck;
 import fr.pathfinder.service.CardService;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class PathfinderCardStudioApp extends Application {
@@ -16,82 +22,162 @@ public class PathfinderCardStudioApp extends Application {
     @Override
     public void start(Stage stage) {
 
-        CardService cardService =
-                new CardService();
+        CardService cardService = new CardService();
+        Deck deck = cardService.chargerDeck();
 
-        Deck deck =
-                cardService.chargerDeck();
+        /*
+         * Partie gauche :
+         * liste des cartes.
+         */
+        ListView<Card> listeCartes = new ListView<>();
 
-        ListView<Card> listeCartes =
-                new ListView<>();
+        listeCartes.getItems().addAll(
+                deck.getCartes());
 
-        TextArea detailsCarte =
-                new TextArea();
+        listeCartes.setCellFactory(param -> new ListCell<>() {
 
-        detailsCarte.setEditable(false);
+            @Override
+            protected void updateItem(
+                    Card carte,
+                    boolean empty) {
 
-        for (Card carte : deck.getCartes()) {
+                super.updateItem(carte, empty);
 
-            listeCartes.getItems().add(carte);
+                if (empty || carte == null) {
+                    setText(null);
+                } else {
+                    setText(carte.getNom());
+                }
+            }
+        });
 
-        }
+        /*
+         * Partie droite :
+         * formulaire de la carte sélectionnée.
+         */
+        Label titreFormulaire = new Label("Détails de la carte");
 
-        listeCartes.setCellFactory(param ->
-                new javafx.scene.control.ListCell<>() {
+        Label labelNom = new Label("Nom");
 
-                    @Override
-                    protected void updateItem(
-                            Card carte,
-                            boolean empty) {
+        TextField champNom = new TextField();
 
-                        super.updateItem(
-                                carte,
-                                empty);
+        Label labelNiveau = new Label("Niveau");
 
-                        if (empty || carte == null) {
+        TextField champNiveau = new TextField();
 
-                            setText(null);
+        Label labelDescription = new Label("Description");
 
-                        } else {
+        TextArea champDescription = new TextArea();
 
-                            setText(carte.getNom());
+        champDescription.setWrapText(true);
+        champDescription.setPrefRowCount(10);
 
-                        }
-                    }
-                });
+        Button boutonSauvegarder = new Button("Sauvegarder");
 
+        boutonSauvegarder.setDisable(true);
+
+        VBox formulaire = new VBox(
+                10,
+                titreFormulaire,
+                labelNom,
+                champNom,
+                labelNiveau,
+                champNiveau,
+                labelDescription,
+                champDescription,
+                boutonSauvegarder);
+
+        formulaire.setPadding(
+                new Insets(20));
+
+        formulaire.setPrefWidth(600);
+
+        /*
+         * Quand une carte est sélectionnée,
+         * ses informations remplissent le formulaire.
+         */
         listeCartes
                 .getSelectionModel()
                 .selectedItemProperty()
                 .addListener(
                         (observable,
-                         ancienneCarte,
-                         nouvelleCarte) -> {
+                                ancienneCarte,
+                                nouvelleCarte) -> {
 
-                            if (nouvelleCarte != null) {
+                            if (nouvelleCarte == null) {
 
-                                detailsCarte.setText(
-                                        nouvelleCarte
-                                                .afficherDetails());
+                                champNom.clear();
+                                champNiveau.clear();
+                                champDescription.clear();
 
+                                boutonSauvegarder.setDisable(true);
+
+                                return;
                             }
 
-                        });
+                            champNom.setText(
+                                    nouvelleCarte.getNom());
 
-        BorderPane root =
-                new BorderPane();
+                            champNiveau.setText(
+                                    String.valueOf(
+                                            nouvelleCarte.getNiveau()));
+
+                            champDescription.setText(
+                                    nouvelleCarte.getDescription());
+
+                            boutonSauvegarder.setDisable(false);
+                        });
+        boutonSauvegarder.setOnAction(event -> {
+
+            Card carteSelectionnee = listeCartes
+                    .getSelectionModel()
+                    .getSelectedItem();
+
+            if (carteSelectionnee == null) {
+                return;
+            }
+
+            carteSelectionnee.setNom(
+                    champNom.getText());
+
+            try {
+
+                carteSelectionnee.setNiveau(
+                        Integer.parseInt(
+                                champNiveau.getText()));
+
+            } catch (NumberFormatException e) {
+
+                System.out.println(
+                        "Niveau invalide.");
+
+                return;
+            }
+
+            carteSelectionnee.setDescription(
+                    champDescription.getText());
+
+            cardService.sauvegarderDeck(deck);
+
+            listeCartes.refresh();
+
+            System.out.println(
+                    "Carte sauvegardée.");
+        });
+
+        BorderPane root = new BorderPane();
 
         root.setLeft(listeCartes);
-        root.setCenter(detailsCarte);
+        root.setCenter(formulaire);
 
-        Scene scene =
-                new Scene(root, 1000, 600);
+        listeCartes.setPrefWidth(300);
+
+        Scene scene = new Scene(root, 1000, 600);
 
         stage.setTitle(
                 "Pathfinder Card Studio");
 
         stage.setScene(scene);
-
         stage.show();
     }
 

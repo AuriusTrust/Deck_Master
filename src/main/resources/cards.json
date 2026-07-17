@@ -1,9 +1,9 @@
 {
   "cards" : [ {
     "type" : "SORT",
-    "nom" : "Explosion volcanique",
-    "niveau" : 3,
-    "description" : "Une explosion de flammes ravage les ennemis.",
+    "nom" : "Explosion volcanique divin",
+    "niveau" : 16,
+    "description" : "Une explosion de flammes ravage les ennemis et les amis.",
     "ecole" : "Évocation",
     "emplacement" : null,
     "actions" : null
