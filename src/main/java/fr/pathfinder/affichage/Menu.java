@@ -86,6 +86,12 @@ public class Menu {
 
                 case "5":
 
+                    modifierUneCarte(deck, cardService);
+
+                    break;
+
+                case "6":
+
                     quitter = true;
 
                     System.out.println(
@@ -136,7 +142,8 @@ public class Menu {
         System.out.println("2 - Rechercher une carte");
         System.out.println("3 - Ajouter une carte");
         System.out.println("4 - Supprimer une carte");
-        System.out.println("5 - Quitter");
+        System.out.println("5 - Modifier une carte");
+        System.out.println("6 - Quitter");
 
         System.out.print("> ");
 
@@ -270,47 +277,137 @@ public class Menu {
 
         deck.ajouterCarte(capacite);
     }
+
     private void supprimerUneCarte(
-        Deck deck,
-        CardService cardService) {
+            Deck deck,
+            CardService cardService) {
 
-    if (deck.taille() == 0) {
+        if (deck.taille() == 0) {
+
+            System.out.println(
+                    "Aucune carte à supprimer.");
+
+            return;
+        }
+
+        System.out.println();
+        System.out.println("=== Suppression d'une carte ===");
+
+        for (int i = 0; i < deck.taille(); i++) {
+
+            Card carte = deck.getCartes().get(i);
+
+            System.out.println(
+                    (i + 1) + " - " + carte.getNom());
+        }
+
+        int numero = demanderUnNombre(
+                "Numéro de la carte à supprimer : ");
+
+        if (numero < 1 || numero > deck.taille()) {
+
+            System.out.println(
+                    "Numéro invalide.");
+
+            return;
+        }
+
+        Card carteSupprimee = deck.supprimerCarte(numero - 1);
+
+        cardService.sauvegarderDeck(deck);
 
         System.out.println(
-                "Aucune carte à supprimer.");
-
-        return;
+                "Carte supprimée : "
+                        + carteSupprimee.getNom());
     }
 
-    System.out.println();
-    System.out.println("=== Suppression d'une carte ===");
+    private void modifierUneCarte(
+            Deck deck,
+            CardService cardService) {
 
-    for (int i = 0; i < deck.taille(); i++) {
+        if (deck.taille() == 0) {
 
-        Card carte = deck.getCartes().get(i);
+            System.out.println(
+                    "Aucune carte à modifier.");
+
+            return;
+        }
+
+        System.out.println();
+        System.out.println(
+                "=== Modification d'une carte ===");
+
+        for (int i = 0; i < deck.taille(); i++) {
+
+            Card carte = deck.getCarte(i);
+
+            System.out.println(
+                    (i + 1) + " - " + carte.getNom());
+        }
+
+        int numero = demanderUnNombre(
+                "Numéro de la carte à modifier : ");
+
+        if (numero < 1 || numero > deck.taille()) {
+
+            System.out.println(
+                    "Numéro invalide.");
+
+            return;
+        }
+
+        Card carte = deck.getCarte(numero - 1);
+
+        System.out.println();
+        System.out.println(
+                "Modification de : " + carte.getNom());
+
+        System.out.print(
+                "Nom actuel : "
+                        + carte.getNom()
+                        + "\nNouveau nom : ");
+
+        String nouveauNom = scanner.nextLine();
+
+        if (!nouveauNom.isBlank()) {
+            carte.setNom(nouveauNom);
+        }
+
+        System.out.print(
+                "Description actuelle : "
+                        + carte.getDescription()
+                        + "\nNouvelle description : ");
+
+        String nouvelleDescription = scanner.nextLine();
+
+        if (!nouvelleDescription.isBlank()) {
+            carte.setDescription(nouvelleDescription);
+        }
+
+        System.out.print(
+                "Niveau actuel : "
+                        + carte.getNiveau()
+                        + "\nNouveau niveau (vide = conserver) : ");
+
+        String niveauTexte = scanner.nextLine();
+
+        if (!niveauTexte.isBlank()) {
+
+            try {
+
+                carte.setNiveau(
+                        Integer.parseInt(niveauTexte));
+
+            } catch (NumberFormatException e) {
+
+                System.out.println(
+                        "Niveau invalide, valeur conservée.");
+            }
+        }
+
+        cardService.sauvegarderDeck(deck);
 
         System.out.println(
-                (i + 1) + " - " + carte.getNom());
+                "Carte modifiée avec succès !");
     }
-
-    int numero = demanderUnNombre(
-            "Numéro de la carte à supprimer : ");
-
-    if (numero < 1 || numero > deck.taille()) {
-
-        System.out.println(
-                "Numéro invalide.");
-
-        return;
-    }
-
-    Card carteSupprimee =
-            deck.supprimerCarte(numero - 1);
-
-    cardService.sauvegarderDeck(deck);
-
-    System.out.println(
-            "Carte supprimée : "
-                    + carteSupprimee.getNom());
-}
 }

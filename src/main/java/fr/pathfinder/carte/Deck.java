@@ -18,6 +18,9 @@ public class Deck {
     public Card supprimerCarte(int index) {
         return cartes.remove(index);
     }
+    public Card getCarte(int index) {
+    return cartes.get(index);
+}
 
     public List<Card> getCartes() {
         return cartes;

@@ -31,13 +31,5 @@
     "ecole" : "inf",
     "emplacement" : null,
     "actions" : null
-  }, {
-    "type" : "SORT",
-    "nom" : "Test",
-    "niveau" : 1,
-    "description" : "azerty",
-    "ecole" : "qsdfgh",
-    "emplacement" : null,
-    "actions" : null
   } ]
 }

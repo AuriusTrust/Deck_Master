@@ -30,6 +30,17 @@ public abstract class Card {
         return type;
     }
 
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public void setNiveau(int niveau) {
+        this.niveau = niveau;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
     // Chaque carte devra savoir s'afficher elle-même
     public abstract String afficherDetails();
 }
