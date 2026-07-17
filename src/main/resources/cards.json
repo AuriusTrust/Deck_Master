@@ -1,0 +1,43 @@
+{
+  "cards" : [ {
+    "type" : "SORT",
+    "nom" : "Explosion volcanique",
+    "niveau" : 3,
+    "description" : "Une explosion de flammes ravage les ennemis.",
+    "ecole" : "Évocation",
+    "emplacement" : null,
+    "actions" : null
+  }, {
+    "type" : "OBJET",
+    "nom" : "Marteau de guerre nain",
+    "niveau" : 4,
+    "description" : "Une arme forgée dans les profondeurs.",
+    "ecole" : null,
+    "emplacement" : "Arme",
+    "actions" : null
+  }, {
+    "type" : "CAPACITE",
+    "nom" : "Frappe puissante",
+    "niveau" : 1,
+    "description" : "Une attaque dévastatrice.",
+    "ecole" : null,
+    "emplacement" : null,
+    "actions" : "2"
+  }, {
+    "type" : "SORT",
+    "nom" : "Création",
+    "niveau" : 1,
+    "description" : "éclat",
+    "ecole" : "inf",
+    "emplacement" : null,
+    "actions" : null
+  }, {
+    "type" : "SORT",
+    "nom" : "Test",
+    "niveau" : 1,
+    "description" : "azerty",
+    "ecole" : "qsdfgh",
+    "emplacement" : null,
+    "actions" : null
+  } ]
+}

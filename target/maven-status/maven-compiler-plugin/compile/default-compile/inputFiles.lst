@@ -1,0 +1,14 @@
+D:\documents\JDR\Deck_Master\src\main\java\fr\pathfinder\affichage\Menu.java
+D:\documents\JDR\Deck_Master\src\main\java\fr\pathfinder\application\Application.java
+D:\documents\JDR\Deck_Master\src\main\java\fr\pathfinder\carte\AbilityCard.java
+D:\documents\JDR\Deck_Master\src\main\java\fr\pathfinder\carte\Card.java
+D:\documents\JDR\Deck_Master\src\main\java\fr\pathfinder\carte\CardType.java
+D:\documents\JDR\Deck_Master\src\main\java\fr\pathfinder\carte\Deck.java
+D:\documents\JDR\Deck_Master\src\main\java\fr\pathfinder\carte\ItemCard.java
+D:\documents\JDR\Deck_Master\src\main\java\fr\pathfinder\carte\SpellCard.java
+D:\documents\JDR\Deck_Master\src\main\java\fr\pathfinder\chargement\CardData.java
+D:\documents\JDR\Deck_Master\src\main\java\fr\pathfinder\chargement\CardDatabase.java
+D:\documents\JDR\Deck_Master\src\main\java\fr\pathfinder\chargement\CardLoader.java
+D:\documents\JDR\Deck_Master\src\main\java\fr\pathfinder\chargement\CardSaver.java
+D:\documents\JDR\Deck_Master\src\main\java\fr\pathfinder\Main.java
+D:\documents\JDR\Deck_Master\src\main\java\fr\pathfinder\service\CardService.java
