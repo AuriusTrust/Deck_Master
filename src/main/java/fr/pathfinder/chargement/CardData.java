@@ -22,6 +22,8 @@ public class CardData {
      */
     public List<String> traditions;
 
+    public String traits;
+
     public String coutIncantation;
 
     public String defense;

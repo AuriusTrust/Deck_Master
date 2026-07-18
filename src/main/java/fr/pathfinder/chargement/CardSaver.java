@@ -46,6 +46,8 @@ public class CardSaver {
 
                     data.duree = sort.getDuree();
 
+                    data.traits = sort.getTraits();
+
                     if (sort.getCoutIncantation() != null) {
 
                         data.coutIncantation = sort.getCoutIncantation().name();

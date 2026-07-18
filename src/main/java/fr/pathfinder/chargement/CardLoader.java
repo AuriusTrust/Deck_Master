@@ -13,40 +13,30 @@ import fr.pathfinder.carte.ItemCard;
 import fr.pathfinder.carte.SpellCard;
 import fr.pathfinder.carte.Tradition;
 
-
 public class CardLoader {
-
 
     public Deck chargerCartes() {
 
-
         Deck deck = new Deck();
-
 
         try {
 
-
             ObjectMapper mapper = new ObjectMapper();
 
-
-            InputStream fichier =
-                getClass()
-                .getClassLoader()
-                .getResourceAsStream("cards.json");
+            InputStream fichier = getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("cards.json");
 
             if (fichier == null) {
                 System.out.println("cards.json introuvable !");
                 return deck;
             }
 
-            CardDatabase database =
-                mapper.readValue(
+            CardDatabase database = mapper.readValue(
                     fichier,
-                    CardDatabase.class
-                );
+                    CardDatabase.class);
 
-
-            for(CardData data : database.cards) {
+            for (CardData data : database.cards) {
 
                 if (data.type == null) {
 
@@ -71,6 +61,8 @@ public class CardLoader {
 
                         sort.setDuree(
                                 data.duree);
+
+                        sort.setTraits(data.traits);
 
                         if (data.coutIncantation != null) {
 
@@ -105,31 +97,25 @@ public class CardLoader {
 
                         break;
 
-
                     case "OBJET":
 
                         deck.ajouterCarte(
-                            new ItemCard(
-                                data.nom,
-                                data.niveau,
-                                data.description,
-                                data.emplacement
-                            )
-                        );
+                                new ItemCard(
+                                        data.nom,
+                                        data.niveau,
+                                        data.description,
+                                        data.emplacement));
 
                         break;
-
 
                     case "CAPACITE":
 
                         deck.ajouterCarte(
-                            new AbilityCard(
-                                data.nom,
-                                data.niveau,
-                                data.description,
-                                data.actions
-                            )
-                        );
+                                new AbilityCard(
+                                        data.nom,
+                                        data.niveau,
+                                        data.description,
+                                        data.actions));
 
                         break;
 
@@ -137,16 +123,13 @@ public class CardLoader {
 
             }
 
-
-        } catch(Exception e) {
+        } catch (Exception e) {
 
             System.out.println(
-                "Erreur chargement cartes : "
-                + e.getMessage()
-            );
+                    "Erreur chargement cartes : "
+                            + e.getMessage());
 
         }
-
 
         return deck;
     }

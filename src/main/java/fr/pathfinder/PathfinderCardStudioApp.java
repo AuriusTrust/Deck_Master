@@ -85,6 +85,10 @@ public class PathfinderCardStudioApp extends Application {
                 champDescription.setPrefRowCount(10);
                 Label labelTradition = new Label("Tradition");
 
+                Label labelTraits = new Label("Traits");
+
+                TextField champTraits = new TextField();
+
                 ComboBox<Tradition> champTradition = new ComboBox<>();
                 champTradition.getItems().addAll(Tradition.values());
 
@@ -110,6 +114,8 @@ public class PathfinderCardStudioApp extends Application {
                                 10,
                                 labelTradition,
                                 champTradition,
+                                labelTraits,
+                                champTraits,
                                 labelIncantation,
                                 champIncantation,
                                 labelDefense,
@@ -158,7 +164,7 @@ public class PathfinderCardStudioApp extends Application {
                                                                 nouvelleCarte) -> {
 
                                                         if (nouvelleCarte == null) {
-                                                                
+
                                                                 champNom.clear();
                                                                 champNiveau.clear();
                                                                 champDescription.clear();
@@ -170,6 +176,7 @@ public class PathfinderCardStudioApp extends Application {
                                                                 formulaireSort.setManaged(false);
 
                                                                 champTradition.setValue(null);
+                                                                champTraits.clear();
                                                                 champIncantation.setValue(null);
                                                                 champDefense.setValue(null);
                                                                 champPortee.clear();
@@ -183,13 +190,15 @@ public class PathfinderCardStudioApp extends Application {
                                                         champNiveau.setText(
                                                                         String.valueOf(
                                                                                         nouvelleCarte.getNiveau()));
-
+                                                        
                                                         champDescription.setText(
                                                                         nouvelleCarte.getDescription());
                                                         if (nouvelleCarte instanceof SpellCard sort) {
 
                                                                 formulaireSort.setVisible(true);
                                                                 formulaireSort.setManaged(true);
+
+                                                                champTraits.setText(sort.getTraits());
 
                                                                 if (sort.getTraditions().isEmpty()) {
                                                                         champTradition.setValue(null);
@@ -214,6 +223,8 @@ public class PathfinderCardStudioApp extends Application {
 
                                                                 formulaireSort.setVisible(false);
                                                                 formulaireSort.setManaged(false);
+
+                                                                champTraits.clear();
                                                         }
 
                                                         boutonSauvegarder.setDisable(false);
@@ -349,6 +360,8 @@ public class PathfinderCardStudioApp extends Application {
                         if (carteSelectionnee instanceof SpellCard sort) {
 
                                 sort.getTraditions().clear();
+                                sort.setTraits(
+                                                champTraits.getText());
 
                                 if (champTradition.getValue() != null) {
                                         sort.getTraditions().add(

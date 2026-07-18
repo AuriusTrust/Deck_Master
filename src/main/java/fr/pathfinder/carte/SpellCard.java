@@ -16,6 +16,7 @@ public class SpellCard extends Card {
     private DefenseType defense;
     private String portee;
     private String duree;
+    private String traits;
 
     /*
      * Ancien constructeur conservé pour ne pas casser
@@ -40,6 +41,7 @@ public class SpellCard extends Card {
         this.defense = DefenseType.AUCUNE;
         this.portee = "";
         this.duree = "";
+        this.traits = "";
     }
 
     public String getEcole() {
@@ -92,6 +94,14 @@ public class SpellCard extends Card {
         return duree;
     }
 
+    public String getTraits() {
+        return traits;
+    }
+
+    public void setTraits(String traits) {
+        this.traits = traits;
+    }
+
     public void setDuree(String duree) {
         this.duree = duree;
     }
@@ -109,6 +119,7 @@ public class SpellCard extends Card {
                 "Type : Sort\n" +
                 "Rang : " + getNiveau() + "\n" +
                 "Traditions : " + traditionsTexte + "\n" +
+                "Traits : " + traits + "\n" +
                 "Incantation : "
                         + coutIncantation + "\n" +
                 "Portée : " + portee + "\n" +
