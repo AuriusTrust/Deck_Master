@@ -84,8 +84,19 @@ public class CardSaver {
 
                     data.type = "CAPACITE";
 
+                    /*
+                     * Ancien champ conservé temporairement
+                     * pour compatibilité avec les anciennes données.
+                     */
                     data.actions = capacite.getNombreActions();
 
+                    data.traitsCapacite = capacite.getTraits();
+                    data.prerequis = capacite.getPrerequis();
+                    data.declencheur = capacite.getDeclencheur();
+
+                    if (capacite.getCoutAction() != null) {
+                        data.coutAction = capacite.getCoutAction().name();
+                    }
                 }
 
                 database.cards.add(data);

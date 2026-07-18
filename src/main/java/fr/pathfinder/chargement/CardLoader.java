@@ -110,12 +110,29 @@ public class CardLoader {
 
                     case "CAPACITE":
 
-                        deck.ajouterCarte(
-                                new AbilityCard(
-                                        data.nom,
-                                        data.niveau,
-                                        data.description,
-                                        data.actions));
+                        AbilityCard capacite = new AbilityCard(
+                                data.nom,
+                                data.niveau,
+                                data.description,
+                                data.actions);
+
+                        capacite.setTraits(
+                                data.traitsCapacite);
+
+                        capacite.setPrerequis(
+                                data.prerequis);
+
+                        capacite.setDeclencheur(
+                                data.declencheur);
+
+                        if (data.coutAction != null) {
+
+                            capacite.setCoutAction(
+                                    ActionCost.valueOf(
+                                            data.coutAction));
+                        }
+
+                        deck.ajouterCarte(capacite);
 
                         break;
 

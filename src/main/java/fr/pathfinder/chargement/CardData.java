@@ -37,5 +37,16 @@ public class CardData {
      */
     public String emplacement;
 
+    /*
+     * Champs spécifiques aux capacités / dons.
+     */
     public String actions;
+
+    public String traitsCapacite;
+
+    public String prerequis;
+
+    public String declencheur;
+
+    public String coutAction;
 }
