@@ -31,5 +31,37 @@
     "ecole" : "inf",
     "emplacement" : null,
     "actions" : null
+  }, {
+    "type" : "SORT",
+    "nom" : "Nouveau sort",
+    "niveau" : 1,
+    "description" : "",
+    "ecole" : "",
+    "emplacement" : null,
+    "actions" : null
+  }, {
+    "type" : "SORT",
+    "nom" : "modification",
+    "niveau" : 1,
+    "description" : "",
+    "ecole" : "",
+    "emplacement" : null,
+    "actions" : null
+  }, {
+    "type" : "OBJET",
+    "nom" : "Nouvel objet",
+    "niveau" : 1,
+    "description" : "",
+    "ecole" : null,
+    "emplacement" : "",
+    "actions" : null
+  }, {
+    "type" : "CAPACITE",
+    "nom" : "Nouvelle capacité",
+    "niveau" : 1,
+    "description" : "",
+    "ecole" : null,
+    "emplacement" : null,
+    "actions" : "1"
   } ]
 }
