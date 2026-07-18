@@ -72,12 +72,20 @@ public class CardSaver {
 
                 } else if (carte instanceof ItemCard) {
 
-                    ItemCard item = (ItemCard) carte;
+                    ItemCard objet = (ItemCard) carte;
 
                     data.type = "OBJET";
 
-                    data.emplacement = item.getEmplacement();
+                    data.emplacement = objet.getEmplacement();
 
+                    data.prixObjet = objet.getPrix();
+
+                    data.traitsObjet = objet.getTraits();
+
+                    if (objet.getActivation() != null) {
+
+                        data.activationObjet = objet.getActivation().name();
+                    }
                 } else if (carte instanceof AbilityCard) {
 
                     AbilityCard capacite = (AbilityCard) carte;

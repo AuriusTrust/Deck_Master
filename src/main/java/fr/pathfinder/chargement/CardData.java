@@ -32,10 +32,17 @@ public class CardData {
 
     public String duree;
 
+
     /*
-     * Champs spécifiques aux autres cartes.
+     * Champs spécifiques aux objets.
      */
     public String emplacement;
+
+    public String prixObjet;
+
+    public String traitsObjet;
+
+    public String activationObjet;
 
     /*
      * Champs spécifiques aux capacités / dons.

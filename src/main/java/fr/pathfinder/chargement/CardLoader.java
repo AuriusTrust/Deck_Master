@@ -99,12 +99,26 @@ public class CardLoader {
 
                     case "OBJET":
 
-                        deck.ajouterCarte(
-                                new ItemCard(
-                                        data.nom,
-                                        data.niveau,
-                                        data.description,
-                                        data.emplacement));
+                        ItemCard objet = new ItemCard(
+                                data.nom,
+                                data.niveau,
+                                data.description,
+                                data.emplacement);
+
+                        objet.setPrix(
+                                data.prixObjet);
+
+                        objet.setTraits(
+                                data.traitsObjet);
+
+                        if (data.activationObjet != null) {
+
+                            objet.setActivation(
+                                    ActionCost.valueOf(
+                                            data.activationObjet));
+                        }
+
+                        deck.ajouterCarte(objet);
 
                         break;
 
