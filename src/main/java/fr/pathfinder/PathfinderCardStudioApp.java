@@ -6,6 +6,9 @@ import fr.pathfinder.service.CardService;
 import fr.pathfinder.carte.AbilityCard;
 import fr.pathfinder.carte.ItemCard;
 import fr.pathfinder.carte.SpellCard;
+import fr.pathfinder.carte.ActionCost;
+import fr.pathfinder.carte.DefenseType;
+import fr.pathfinder.carte.Tradition;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -24,6 +27,7 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 
 public class PathfinderCardStudioApp extends Application {
 
@@ -79,6 +83,44 @@ public class PathfinderCardStudioApp extends Application {
 
                 champDescription.setWrapText(true);
                 champDescription.setPrefRowCount(10);
+                Label labelTradition = new Label("Tradition");
+
+                ComboBox<Tradition> champTradition = new ComboBox<>();
+                champTradition.getItems().addAll(Tradition.values());
+
+                Label labelIncantation = new Label("Temps d'incantation");
+
+                ComboBox<ActionCost> champIncantation = new ComboBox<>();
+                champIncantation.getItems().addAll(ActionCost.values());
+
+                Label labelDefense = new Label("Défense");
+
+                ComboBox<DefenseType> champDefense = new ComboBox<>();
+                champDefense.getItems().addAll(DefenseType.values());
+
+                Label labelPortee = new Label("Portée");
+
+                TextField champPortee = new TextField();
+
+                Label labelDuree = new Label("Durée");
+
+                TextField champDuree = new TextField();
+
+                VBox formulaireSort = new VBox(
+                                10,
+                                labelTradition,
+                                champTradition,
+                                labelIncantation,
+                                champIncantation,
+                                labelDefense,
+                                champDefense,
+                                labelPortee,
+                                champPortee,
+                                labelDuree,
+                                champDuree);
+
+                formulaireSort.setVisible(false);
+                formulaireSort.setManaged(false);
 
                 Button boutonAjouter = new Button("Ajouter");
                 Button boutonSupprimer = new Button("Supprimer");
@@ -94,6 +136,7 @@ public class PathfinderCardStudioApp extends Application {
                                 champNom,
                                 labelNiveau,
                                 champNiveau,
+                                formulaireSort,
                                 labelDescription,
                                 champDescription);
 
@@ -123,6 +166,14 @@ public class PathfinderCardStudioApp extends Application {
                                                                 boutonSauvegarder.setDisable(true);
                                                                 boutonSupprimer.setDisable(true);
 
+                                                                formulaireSort.setVisible(false);
+                                                                formulaireSort.setManaged(false);
+
+                                                                champTradition.setValue(null);
+                                                                champIncantation.setValue(null);
+                                                                champDefense.setValue(null);
+                                                                champPortee.clear();
+                                                                champDuree.clear();
                                                                 return;
                                                         }
 
@@ -135,6 +186,35 @@ public class PathfinderCardStudioApp extends Application {
 
                                                         champDescription.setText(
                                                                         nouvelleCarte.getDescription());
+                                                        if (nouvelleCarte instanceof SpellCard sort) {
+
+                                                                formulaireSort.setVisible(true);
+                                                                formulaireSort.setManaged(true);
+
+                                                                if (sort.getTraditions().isEmpty()) {
+                                                                        champTradition.setValue(null);
+                                                                } else {
+                                                                        champTradition.setValue(
+                                                                                        sort.getTraditions().get(0));
+                                                                }
+
+                                                                champIncantation.setValue(
+                                                                                sort.getCoutIncantation());
+
+                                                                champDefense.setValue(
+                                                                                sort.getDefense());
+
+                                                                champPortee.setText(
+                                                                                sort.getPortee());
+
+                                                                champDuree.setText(
+                                                                                sort.getDuree());
+
+                                                        } else {
+
+                                                                formulaireSort.setVisible(false);
+                                                                formulaireSort.setManaged(false);
+                                                        }
 
                                                         boutonSauvegarder.setDisable(false);
                                                         boutonSupprimer.setDisable(false);
@@ -266,6 +346,31 @@ public class PathfinderCardStudioApp extends Application {
 
                         carteSelectionnee.setDescription(
                                         champDescription.getText());
+                        if (carteSelectionnee instanceof SpellCard sort) {
+
+                                sort.getTraditions().clear();
+
+                                if (champTradition.getValue() != null) {
+                                        sort.getTraditions().add(
+                                                        champTradition.getValue());
+                                }
+
+                                if (champIncantation.getValue() != null) {
+                                        sort.setCoutIncantation(
+                                                        champIncantation.getValue());
+                                }
+
+                                if (champDefense.getValue() != null) {
+                                        sort.setDefense(
+                                                        champDefense.getValue());
+                                }
+
+                                sort.setPortee(
+                                                champPortee.getText());
+
+                                sort.setDuree(
+                                                champDuree.getText());
+                        }
 
                         cardService.sauvegarderDeck(deck);
 

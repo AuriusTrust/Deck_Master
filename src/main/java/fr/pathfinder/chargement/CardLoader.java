@@ -1,11 +1,17 @@
 package fr.pathfinder.chargement;
 
-
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fr.pathfinder.carte.*;
+import fr.pathfinder.carte.AbilityCard;
+import fr.pathfinder.carte.ActionCost;
+import fr.pathfinder.carte.Deck;
+import fr.pathfinder.carte.DefenseType;
+import fr.pathfinder.carte.ItemCard;
+import fr.pathfinder.carte.SpellCard;
+import fr.pathfinder.carte.Tradition;
 
 
 public class CardLoader {
@@ -50,19 +56,52 @@ public class CardLoader {
 
                 }
 
-                switch(data.type) {
-
+                switch (data.type) {
 
                     case "SORT":
 
-                        deck.ajouterCarte(
-                            new SpellCard(
+                        SpellCard sort = new SpellCard(
                                 data.nom,
                                 data.niveau,
                                 data.description,
-                                data.ecole
-                            )
-                        );
+                                data.ecole);
+
+                        sort.setPortee(
+                                data.portee);
+
+                        sort.setDuree(
+                                data.duree);
+
+                        if (data.coutIncantation != null) {
+
+                            sort.setCoutIncantation(
+                                    ActionCost.valueOf(
+                                            data.coutIncantation));
+                        }
+
+                        if (data.defense != null) {
+
+                            sort.setDefense(
+                                    DefenseType.valueOf(
+                                            data.defense));
+                        }
+
+                        if (data.traditions != null) {
+
+                            ArrayList<Tradition> traditions = new ArrayList<>();
+
+                            for (String traditionTexte : data.traditions) {
+
+                                traditions.add(
+                                        Tradition.valueOf(
+                                                traditionTexte));
+                            }
+
+                            sort.setTraditions(
+                                    traditions);
+                        }
+
+                        deck.ajouterCarte(sort);
 
                         break;
 

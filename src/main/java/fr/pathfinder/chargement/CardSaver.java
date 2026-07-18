@@ -42,6 +42,32 @@ public class CardSaver {
 
                     data.ecole = sort.getEcole();
 
+                    data.portee = sort.getPortee();
+
+                    data.duree = sort.getDuree();
+
+                    if (sort.getCoutIncantation() != null) {
+
+                        data.coutIncantation = sort.getCoutIncantation().name();
+
+                    }
+
+                    if (sort.getDefense() != null) {
+
+                        data.defense = sort.getDefense().name();
+
+                    }
+
+                    if (sort.getTraditions() != null
+                            && !sort.getTraditions().isEmpty()) {
+
+                        data.traditions = sort.getTraditions()
+                                .stream()
+                                .map(Enum::name)
+                                .toList();
+
+                    }
+
                 } else if (carte instanceof ItemCard) {
 
                     ItemCard item = (ItemCard) carte;

@@ -5,6 +5,11 @@
     "niveau" : 16,
     "description" : "Une explosion de flammes ravage les ennemis et les amis.",
     "ecole" : "Évocation",
+    "traditions" : null,
+    "coutIncantation" : "AUCUNE",
+    "defense" : "AUCUNE",
+    "portee" : null,
+    "duree" : null,
     "emplacement" : null,
     "actions" : null
   }, {
@@ -13,6 +18,11 @@
     "niveau" : 4,
     "description" : "Une arme forgée dans les profondeurs.",
     "ecole" : null,
+    "traditions" : null,
+    "coutIncantation" : null,
+    "defense" : null,
+    "portee" : null,
+    "duree" : null,
     "emplacement" : "Arme",
     "actions" : null
   }, {
@@ -21,6 +31,11 @@
     "niveau" : 1,
     "description" : "Une attaque dévastatrice.",
     "ecole" : null,
+    "traditions" : null,
+    "coutIncantation" : null,
+    "defense" : null,
+    "portee" : null,
+    "duree" : null,
     "emplacement" : null,
     "actions" : "2"
   }, {
@@ -29,6 +44,11 @@
     "niveau" : 1,
     "description" : "éclat",
     "ecole" : "inf",
+    "traditions" : null,
+    "coutIncantation" : "AUCUNE",
+    "defense" : "AUCUNE",
+    "portee" : null,
+    "duree" : null,
     "emplacement" : null,
     "actions" : null
   }, {
@@ -37,6 +57,11 @@
     "niveau" : 1,
     "description" : "",
     "ecole" : "",
+    "traditions" : null,
+    "coutIncantation" : "AUCUNE",
+    "defense" : "AUCUNE",
+    "portee" : null,
+    "duree" : null,
     "emplacement" : null,
     "actions" : null
   }, {
@@ -45,6 +70,11 @@
     "niveau" : 1,
     "description" : "",
     "ecole" : "",
+    "traditions" : null,
+    "coutIncantation" : "AUCUNE",
+    "defense" : "AUCUNE",
+    "portee" : null,
+    "duree" : null,
     "emplacement" : null,
     "actions" : null
   }, {
@@ -53,6 +83,11 @@
     "niveau" : 1,
     "description" : "",
     "ecole" : null,
+    "traditions" : null,
+    "coutIncantation" : null,
+    "defense" : null,
+    "portee" : null,
+    "duree" : null,
     "emplacement" : "",
     "actions" : null
   }, {
@@ -61,7 +96,38 @@
     "niveau" : 1,
     "description" : "",
     "ecole" : null,
+    "traditions" : null,
+    "coutIncantation" : null,
+    "defense" : null,
+    "portee" : null,
+    "duree" : null,
     "emplacement" : null,
     "actions" : "1"
+  }, {
+    "type" : "OBJET",
+    "nom" : "Nouvel objet",
+    "niveau" : 1,
+    "description" : "",
+    "ecole" : null,
+    "traditions" : null,
+    "coutIncantation" : null,
+    "defense" : null,
+    "portee" : null,
+    "duree" : null,
+    "emplacement" : "",
+    "actions" : null
+  }, {
+    "type" : "SORT",
+    "nom" : "Vérification finale",
+    "niveau" : 1,
+    "description" : "",
+    "ecole" : "",
+    "traditions" : [ "ARCANIQUE" ],
+    "coutIncantation" : "DEUX_ACTIONS",
+    "defense" : "REFLEXES",
+    "portee" : "30 m",
+    "duree" : "Instantanée",
+    "emplacement" : null,
+    "actions" : null
   } ]
 }
