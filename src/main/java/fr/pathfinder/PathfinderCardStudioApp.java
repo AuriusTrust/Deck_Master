@@ -9,6 +9,7 @@ import fr.pathfinder.carte.ItemCard;
 import fr.pathfinder.carte.SpellCard;
 import fr.pathfinder.carte.Tradition;
 import fr.pathfinder.service.CardService;
+import fr.pathfinder.affichage.javafx.ItemForm;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -32,628 +33,608 @@ import javafx.stage.Stage;
 
 public class PathfinderCardStudioApp extends Application {
 
-    @Override
-    public void start(Stage stage) {
+        @Override
+        public void start(Stage stage) {
 
-        CardService cardService = new CardService();
-        Deck deck = cardService.chargerDeck();
+                CardService cardService = new CardService();
+                Deck deck = cardService.chargerDeck();
 
-        /*
-         * Liste des cartes.
-         */
-        ListView<Card> listeCartes = new ListView<>();
+                /*
+                 * Liste des cartes.
+                 */
+                ListView<Card> listeCartes = new ListView<>();
 
-        listeCartes.getItems().addAll(
-                deck.getCartes());
+                listeCartes.getItems().addAll(
+                                deck.getCartes());
 
-        listeCartes.setCellFactory(param ->
-                new ListCell<>() {
+                listeCartes.setCellFactory(param -> new ListCell<>() {
 
-                    @Override
-                    protected void updateItem(
-                            Card carte,
-                            boolean empty) {
+                        @Override
+                        protected void updateItem(
+                                        Card carte,
+                                        boolean empty) {
 
-                        super.updateItem(carte, empty);
+                                super.updateItem(carte, empty);
 
-                        if (empty || carte == null) {
-                            setText(null);
-                        } else {
-                            setText(carte.getNom());
+                                if (empty || carte == null) {
+                                        setText(null);
+                                } else {
+                                        setText(carte.getNom());
+                                }
                         }
-                    }
                 });
 
-        /*
-         * Champs communs à toutes les cartes.
-         */
-        Label titreFormulaire =
-                new Label("Détails de la carte");
+                /*
+                 * Champs communs à toutes les cartes.
+                 */
+                Label titreFormulaire = new Label("Détails de la carte");
 
-        Label labelNom =
-                new Label("Nom");
+                Label labelNom = new Label("Nom");
 
-        TextField champNom =
-                new TextField();
+                TextField champNom = new TextField();
 
-        Label labelNiveau =
-                new Label("Niveau");
+                Label labelNiveau = new Label("Niveau");
 
-        TextField champNiveau =
-                new TextField();
+                TextField champNiveau = new TextField();
 
-        Label labelDescription =
-                new Label("Description");
+                Label labelDescription = new Label("Description");
 
-        TextArea champDescription =
-                new TextArea();
+                TextArea champDescription = new TextArea();
 
-        champDescription.setWrapText(true);
-        champDescription.setPrefRowCount(10);
+                champDescription.setWrapText(true);
+                champDescription.setPrefRowCount(10);
 
-        /*
-         * Champs spécifiques aux sorts.
-         */
-        Label labelTradition =
-                new Label("Tradition");
+                /*
+                 * Champs spécifiques aux sorts.
+                 */
+                Label labelTradition = new Label("Tradition");
 
-        ComboBox<Tradition> champTradition =
-                new ComboBox<>();
+                ComboBox<Tradition> champTradition = new ComboBox<>();
 
-        champTradition.getItems().addAll(
-                Tradition.values());
+                champTradition.getItems().addAll(
+                                Tradition.values());
 
-        Label labelTraits =
-                new Label("Traits");
+                Label labelTraits = new Label("Traits");
 
-        TextField champTraits =
-                new TextField();
+                TextField champTraits = new TextField();
 
-        Label labelIncantation =
-                new Label("Temps d'incantation");
+                Label labelIncantation = new Label("Temps d'incantation");
 
-        ComboBox<ActionCost> champIncantation =
-                new ComboBox<>();
+                ComboBox<ActionCost> champIncantation = new ComboBox<>();
 
-        champIncantation.getItems().addAll(
-                ActionCost.values());
+                champIncantation.getItems().addAll(
+                                ActionCost.values());
 
-        Label labelDefense =
-                new Label("Défense");
+                Label labelDefense = new Label("Défense");
 
-        ComboBox<DefenseType> champDefense =
-                new ComboBox<>();
+                ComboBox<DefenseType> champDefense = new ComboBox<>();
 
-        champDefense.getItems().addAll(
-                DefenseType.values());
+                champDefense.getItems().addAll(
+                                DefenseType.values());
 
-        Label labelPortee =
-                new Label("Portée");
+                Label labelPortee = new Label("Portée");
 
-        TextField champPortee =
-                new TextField();
+                TextField champPortee = new TextField();
 
-        Label labelDuree =
-                new Label("Durée");
+                Label labelDuree = new Label("Durée");
 
-        TextField champDuree =
-                new TextField();
+                TextField champDuree = new TextField();
 
-        VBox formulaireSort = new VBox(
-                10,
-                labelTradition,
-                champTradition,
-                labelTraits,
-                champTraits,
-                labelIncantation,
-                champIncantation,
-                labelDefense,
-                champDefense,
-                labelPortee,
-                champPortee,
-                labelDuree,
-                champDuree);
+                VBox formulaireSort = new VBox(
+                                10,
+                                labelTradition,
+                                champTradition,
+                                labelTraits,
+                                champTraits,
+                                labelIncantation,
+                                champIncantation,
+                                labelDefense,
+                                champDefense,
+                                labelPortee,
+                                champPortee,
+                                labelDuree,
+                                champDuree);
 
-        formulaireSort.setVisible(false);
-        formulaireSort.setManaged(false);
+                formulaireSort.setVisible(false);
+                formulaireSort.setManaged(false);
 
-        /*
-         * Champs spécifiques aux dons et capacités.
-         */
-        Label labelTraitsCapacite =
-                new Label("Traits");
+                /*
+                 * Champs spécifiques aux dons et capacités.
+                 */
+                Label labelTraitsCapacite = new Label("Traits");
 
-        TextField champTraitsCapacite =
-                new TextField();
+                TextField champTraitsCapacite = new TextField();
 
-        Label labelCoutAction =
-                new Label("Coût en actions");
+                Label labelCoutAction = new Label("Coût en actions");
 
-        ComboBox<ActionCost> champCoutAction =
-                new ComboBox<>();
+                ComboBox<ActionCost> champCoutAction = new ComboBox<>();
 
-        champCoutAction.getItems().addAll(
-                ActionCost.values());
+                champCoutAction.getItems().addAll(
+                                ActionCost.values());
 
-        Label labelPrerequis =
-                new Label("Prérequis");
+                Label labelPrerequis = new Label("Prérequis");
 
-        TextField champPrerequis =
-                new TextField();
+                TextField champPrerequis = new TextField();
 
-        Label labelDeclencheur =
-                new Label("Déclencheur");
+                Label labelDeclencheur = new Label("Déclencheur");
 
-        TextArea champDeclencheur =
-                new TextArea();
+                TextArea champDeclencheur = new TextArea();
 
-        champDeclencheur.setWrapText(true);
-        champDeclencheur.setPrefRowCount(3);
+                champDeclencheur.setWrapText(true);
+                champDeclencheur.setPrefRowCount(3);
 
-        VBox formulaireCapacite = new VBox(
-                10,
-                labelTraitsCapacite,
-                champTraitsCapacite,
-                labelCoutAction,
-                champCoutAction,
-                labelPrerequis,
-                champPrerequis,
-                labelDeclencheur,
-                champDeclencheur);
+                VBox formulaireCapacite = new VBox(
+                                10,
+                                labelTraitsCapacite,
+                                champTraitsCapacite,
+                                labelCoutAction,
+                                champCoutAction,
+                                labelPrerequis,
+                                champPrerequis,
+                                labelDeclencheur,
+                                champDeclencheur);
 
-        formulaireCapacite.setVisible(false);
-        formulaireCapacite.setManaged(false);
+                formulaireCapacite.setVisible(false);
+                formulaireCapacite.setManaged(false);
 
-        /*
-         * Boutons.
-         */
-        Button boutonAjouter =
-                new Button("Ajouter");
+                ItemForm formulaireObjet = new ItemForm();
 
-        Button boutonSupprimer =
-                new Button("Supprimer");
+                /*
+                 * Boutons.
+                 */
+                Button boutonAjouter = new Button("Ajouter");
 
-        boutonSupprimer.setDisable(true);
+                Button boutonSupprimer = new Button("Supprimer");
 
-        Button boutonSauvegarder =
-                new Button("Sauvegarder");
+                boutonSupprimer.setDisable(true);
 
-        boutonSauvegarder.setDisable(true);
+                Button boutonSauvegarder = new Button("Sauvegarder");
 
-        /*
-         * Formulaire principal.
-         */
-        VBox formulaire = new VBox(
-                10,
-                titreFormulaire,
-                labelNom,
-                champNom,
-                labelNiveau,
-                champNiveau,
-                formulaireSort,
-                formulaireCapacite,
-                labelDescription,
-                champDescription);
+                boutonSauvegarder.setDisable(true);
 
-        formulaire.setPadding(
-                new Insets(20));
+                /*
+                 * Formulaire principal.
+                 */
+                VBox formulaire = new VBox(
+                                10,
+                                titreFormulaire,
+                                labelNom,
+                                champNom,
+                                labelNiveau,
+                                champNiveau,
+                                formulaireSort,
+                                formulaireCapacite,
+                                formulaireObjet,
+                                labelDescription,
+                                champDescription);
 
-        formulaire.setPrefWidth(600);
+                formulaire.setPadding(
+                                new Insets(20));
 
-        /*
-         * Changement de carte sélectionnée.
-         */
-        listeCartes
-                .getSelectionModel()
-                .selectedItemProperty()
-                .addListener(
-                        (observable,
-                         ancienneCarte,
-                         nouvelleCarte) -> {
+                formulaire.setPrefWidth(600);
 
-                            if (nouvelleCarte == null) {
+                /*
+                 * Changement de carte sélectionnée.
+                 */
+                listeCartes
+                                .getSelectionModel()
+                                .selectedItemProperty()
+                                .addListener(
+                                                (observable,
+                                                                ancienneCarte,
+                                                                nouvelleCarte) -> {
 
-                                champNom.clear();
-                                champNiveau.clear();
-                                champDescription.clear();
+                                                        if (nouvelleCarte == null) {
 
-                                formulaireSort.setVisible(false);
-                                formulaireSort.setManaged(false);
+                                                                champNom.clear();
+                                                                champNiveau.clear();
+                                                                champDescription.clear();
 
-                                champTradition.setValue(null);
-                                champTraits.clear();
-                                champIncantation.setValue(null);
-                                champDefense.setValue(null);
-                                champPortee.clear();
-                                champDuree.clear();
+                                                                formulaireSort.setVisible(false);
+                                                                formulaireSort.setManaged(false);
 
-                                formulaireCapacite.setVisible(false);
-                                formulaireCapacite.setManaged(false);
+                                                                champTradition.setValue(null);
+                                                                champTraits.clear();
+                                                                champIncantation.setValue(null);
+                                                                champDefense.setValue(null);
+                                                                champPortee.clear();
+                                                                champDuree.clear();
 
-                                champTraitsCapacite.clear();
-                                champCoutAction.setValue(null);
-                                champPrerequis.clear();
-                                champDeclencheur.clear();
+                                                                formulaireCapacite.setVisible(false);
+                                                                formulaireCapacite.setManaged(false);
 
-                                boutonSauvegarder.setDisable(true);
-                                boutonSupprimer.setDisable(true);
+                                                                champTraitsCapacite.clear();
+                                                                champCoutAction.setValue(null);
+                                                                champPrerequis.clear();
+                                                                champDeclencheur.clear();
+
+                                                                boutonSauvegarder.setDisable(true);
+                                                                boutonSupprimer.setDisable(true);
+
+                                                                formulaireObjet.masquer();
+
+                                                                return;
+                                                        }
+
+                                                        champNom.setText(
+                                                                        nouvelleCarte.getNom());
+
+                                                        champNiveau.setText(
+                                                                        String.valueOf(
+                                                                                        nouvelleCarte.getNiveau()));
+
+                                                        champDescription.setText(
+                                                                        nouvelleCarte.getDescription());
+
+                                                        if (nouvelleCarte instanceof SpellCard sort) {
+
+                                                                formulaireSort.setVisible(true);
+                                                                formulaireSort.setManaged(true);
+
+                                                                formulaireCapacite.setVisible(false);
+                                                                formulaireCapacite.setManaged(false);
+
+                                                                formulaireObjet.masquer();
+
+                                                                champTraits.setText(
+                                                                                sort.getTraits());
+
+                                                                if (sort.getTraditions().isEmpty()) {
+
+                                                                        champTradition.setValue(null);
+
+                                                                } else {
+
+                                                                        champTradition.setValue(
+                                                                                        sort.getTraditions().get(0));
+                                                                }
+
+                                                                champIncantation.setValue(
+                                                                                sort.getCoutIncantation());
+
+                                                                champDefense.setValue(
+                                                                                sort.getDefense());
+
+                                                                champPortee.setText(
+                                                                                sort.getPortee());
+
+                                                                champDuree.setText(
+                                                                                sort.getDuree());
+
+                                                        } else if (nouvelleCarte instanceof AbilityCard capacite) {
+
+                                                                formulaireSort.setVisible(false);
+                                                                formulaireSort.setManaged(false);
+
+                                                                formulaireCapacite.setVisible(true);
+                                                                formulaireCapacite.setManaged(true);
+
+                                                                formulaireObjet.masquer();
+
+                                                                champTraitsCapacite.setText(
+                                                                                capacite.getTraits());
+
+                                                                champCoutAction.setValue(
+                                                                                capacite.getCoutAction());
+
+                                                                champPrerequis.setText(
+                                                                                capacite.getPrerequis());
+
+                                                                champDeclencheur.setText(
+                                                                                capacite.getDeclencheur());
+
+                                                        } else if (nouvelleCarte instanceof ItemCard objet) {
+
+                                                                formulaireSort.setVisible(false);
+                                                                formulaireSort.setManaged(false);
+
+                                                                formulaireCapacite.setVisible(false);
+                                                                formulaireCapacite.setManaged(false);
+
+                                                                formulaireObjet.afficher(objet);
+
+                                                        } else {
+
+                                                                formulaireSort.setVisible(false);
+                                                                formulaireSort.setManaged(false);
+
+                                                                formulaireCapacite.setVisible(false);
+                                                                formulaireCapacite.setManaged(false);
+
+                                                                formulaireObjet.masquer();
+
+                                                                champTraits.clear();
+                                                                champTraitsCapacite.clear();
+
+                                                                champTradition.setValue(null);
+                                                                champIncantation.setValue(null);
+                                                                champDefense.setValue(null);
+                                                                champCoutAction.setValue(null);
+
+                                                                champPortee.clear();
+                                                                champDuree.clear();
+                                                                champPrerequis.clear();
+                                                                champDeclencheur.clear();
+                                                        }
+
+                                                        boutonSauvegarder.setDisable(false);
+                                                        boutonSupprimer.setDisable(false);
+                                                });
+
+                /*
+                 * Ajouter une carte.
+                 */
+                boutonAjouter.setOnAction(event -> {
+
+                        ChoiceDialog<String> dialogueType = new ChoiceDialog<>(
+                                        "Sort",
+                                        "Sort",
+                                        "Objet",
+                                        "Capacité");
+
+                        dialogueType.setTitle(
+                                        "Ajouter une carte");
+
+                        dialogueType.setHeaderText(
+                                        "Choisissez le type de carte");
+
+                        dialogueType.setContentText(
+                                        "Type :");
+
+                        dialogueType.showAndWait()
+                                        .ifPresent(typeChoisi -> {
+
+                                                Card nouvelleCarte;
+
+                                                switch (typeChoisi) {
+
+                                                        case "Objet":
+
+                                                                nouvelleCarte = new ItemCard(
+                                                                                "Nouvel objet",
+                                                                                1,
+                                                                                "",
+                                                                                "");
+
+                                                                break;
+
+                                                        case "Capacité":
+
+                                                                nouvelleCarte = new AbilityCard(
+                                                                                "Nouvelle capacité",
+                                                                                1,
+                                                                                "",
+                                                                                "1");
+
+                                                                break;
+
+                                                        case "Sort":
+                                                        default:
+
+                                                                nouvelleCarte = new SpellCard(
+                                                                                "Nouveau sort",
+                                                                                1,
+                                                                                "",
+                                                                                "");
+
+                                                                break;
+                                                }
+
+                                                deck.ajouterCarte(
+                                                                nouvelleCarte);
+
+                                                listeCartes.getItems().add(
+                                                                nouvelleCarte);
+
+                                                listeCartes
+                                                                .getSelectionModel()
+                                                                .select(nouvelleCarte);
+
+                                                cardService.sauvegarderDeck(
+                                                                deck);
+                                        });
+                });
+
+                /*
+                 * Supprimer une carte.
+                 */
+                boutonSupprimer.setOnAction(event -> {
+
+                        Card carteSelectionnee = listeCartes
+                                        .getSelectionModel()
+                                        .getSelectedItem();
+
+                        if (carteSelectionnee == null) {
+                                return;
+                        }
+
+                        Alert confirmation = new Alert(
+                                        Alert.AlertType.CONFIRMATION);
+
+                        confirmation.setTitle(
+                                        "Suppression");
+
+                        confirmation.setHeaderText(
+                                        "Supprimer la carte ?");
+
+                        confirmation.setContentText(
+                                        carteSelectionnee.getNom());
+
+                        confirmation.showAndWait()
+                                        .ifPresent(reponse -> {
+
+                                                if (reponse == ButtonType.OK) {
+
+                                                        deck.getCartes().remove(
+                                                                        carteSelectionnee);
+
+                                                        listeCartes.getItems().remove(
+                                                                        carteSelectionnee);
+
+                                                        cardService.sauvegarderDeck(
+                                                                        deck);
+                                                }
+                                        });
+                });
+
+                /*
+                 * Sauvegarder la carte sélectionnée.
+                 */
+                boutonSauvegarder.setOnAction(event -> {
+
+                        Card carteSelectionnee = listeCartes
+                                        .getSelectionModel()
+                                        .getSelectedItem();
+
+                        if (carteSelectionnee == null) {
+                                return;
+                        }
+
+                        carteSelectionnee.setNom(
+                                        champNom.getText());
+
+                        try {
+
+                                carteSelectionnee.setNiveau(
+                                                Integer.parseInt(
+                                                                champNiveau.getText()));
+
+                        } catch (NumberFormatException e) {
+
+                                Alert erreur = new Alert(
+                                                Alert.AlertType.ERROR);
+
+                                erreur.setTitle(
+                                                "Niveau invalide");
+
+                                erreur.setHeaderText(
+                                                "Le niveau doit être un nombre.");
+
+                                erreur.showAndWait();
 
                                 return;
-                            }
+                        }
 
-                            champNom.setText(
-                                    nouvelleCarte.getNom());
+                        carteSelectionnee.setDescription(
+                                        champDescription.getText());
 
-                            champNiveau.setText(
-                                    String.valueOf(
-                                            nouvelleCarte.getNiveau()));
+                        if (carteSelectionnee instanceof SpellCard sort) {
 
-                            champDescription.setText(
-                                    nouvelleCarte.getDescription());
+                                sort.getTraditions().clear();
 
-                            if (nouvelleCarte
-                                    instanceof SpellCard sort) {
+                                sort.setTraits(
+                                                champTraits.getText());
 
-                                formulaireSort.setVisible(true);
-                                formulaireSort.setManaged(true);
+                                if (champTradition.getValue() != null) {
 
-                                formulaireCapacite.setVisible(false);
-                                formulaireCapacite.setManaged(false);
-
-                                champTraits.setText(
-                                        sort.getTraits());
-
-                                if (sort.getTraditions().isEmpty()) {
-
-                                    champTradition.setValue(null);
-
-                                } else {
-
-                                    champTradition.setValue(
-                                            sort.getTraditions().get(0));
+                                        sort.getTraditions().add(
+                                                        champTradition.getValue());
                                 }
 
-                                champIncantation.setValue(
-                                        sort.getCoutIncantation());
+                                if (champIncantation.getValue() != null) {
 
-                                champDefense.setValue(
-                                        sort.getDefense());
+                                        sort.setCoutIncantation(
+                                                        champIncantation.getValue());
+                                }
 
-                                champPortee.setText(
-                                        sort.getPortee());
+                                if (champDefense.getValue() != null) {
 
-                                champDuree.setText(
-                                        sort.getDuree());
+                                        sort.setDefense(
+                                                        champDefense.getValue());
+                                }
 
-                            } else if (nouvelleCarte
-                                    instanceof AbilityCard capacite) {
+                                sort.setPortee(
+                                                champPortee.getText());
 
-                                formulaireSort.setVisible(false);
-                                formulaireSort.setManaged(false);
-
-                                formulaireCapacite.setVisible(true);
-                                formulaireCapacite.setManaged(true);
-
-                                champTraitsCapacite.setText(
-                                        capacite.getTraits());
-
-                                champCoutAction.setValue(
-                                        capacite.getCoutAction());
-
-                                champPrerequis.setText(
-                                        capacite.getPrerequis());
-
-                                champDeclencheur.setText(
-                                        capacite.getDeclencheur());
-
-                            } else {
-
-                                formulaireSort.setVisible(false);
-                                formulaireSort.setManaged(false);
-
-                                formulaireCapacite.setVisible(false);
-                                formulaireCapacite.setManaged(false);
-
-                                champTraits.clear();
-                                champTraitsCapacite.clear();
-
-                                champTradition.setValue(null);
-                                champIncantation.setValue(null);
-                                champDefense.setValue(null);
-                                champCoutAction.setValue(null);
-
-                                champPortee.clear();
-                                champDuree.clear();
-                                champPrerequis.clear();
-                                champDeclencheur.clear();
-                            }
-
-                            boutonSauvegarder.setDisable(false);
-                            boutonSupprimer.setDisable(false);
-                        });
-
-        /*
-         * Ajouter une carte.
-         */
-        boutonAjouter.setOnAction(event -> {
-
-            ChoiceDialog<String> dialogueType =
-                    new ChoiceDialog<>(
-                            "Sort",
-                            "Sort",
-                            "Objet",
-                            "Capacité");
-
-            dialogueType.setTitle(
-                    "Ajouter une carte");
-
-            dialogueType.setHeaderText(
-                    "Choisissez le type de carte");
-
-            dialogueType.setContentText(
-                    "Type :");
-
-            dialogueType.showAndWait()
-                    .ifPresent(typeChoisi -> {
-
-                        Card nouvelleCarte;
-
-                        switch (typeChoisi) {
-
-                            case "Objet":
-
-                                nouvelleCarte =
-                                        new ItemCard(
-                                                "Nouvel objet",
-                                                1,
-                                                "",
-                                                "");
-
-                                break;
-
-                            case "Capacité":
-
-                                nouvelleCarte =
-                                        new AbilityCard(
-                                                "Nouvelle capacité",
-                                                1,
-                                                "",
-                                                "1");
-
-                                break;
-
-                            case "Sort":
-                            default:
-
-                                nouvelleCarte =
-                                        new SpellCard(
-                                                "Nouveau sort",
-                                                1,
-                                                "",
-                                                "");
-
-                                break;
+                                sort.setDuree(
+                                                champDuree.getText());
                         }
 
-                        deck.ajouterCarte(
-                                nouvelleCarte);
+                        if (carteSelectionnee instanceof AbilityCard capacite) {
 
-                        listeCartes.getItems().add(
-                                nouvelleCarte);
+                                capacite.setTraits(
+                                                champTraitsCapacite.getText());
 
-                        listeCartes
-                                .getSelectionModel()
-                                .select(nouvelleCarte);
+                                if (champCoutAction.getValue() != null) {
+
+                                        capacite.setCoutAction(
+                                                        champCoutAction.getValue());
+                                }
+
+                                capacite.setPrerequis(
+                                                champPrerequis.getText());
+
+                                capacite.setDeclencheur(
+                                                champDeclencheur.getText());
+                        }
+
+                        if (carteSelectionnee instanceof ItemCard objet) {
+
+                                formulaireObjet.sauvegarderDans(
+                                                objet);
+                        }
 
                         cardService.sauvegarderDeck(
-                                deck);
-                    });
-        });
+                                        deck);
 
-        /*
-         * Supprimer une carte.
-         */
-        boutonSupprimer.setOnAction(event -> {
+                        listeCartes.refresh();
+                });
 
-            Card carteSelectionnee =
-                    listeCartes
-                            .getSelectionModel()
-                            .getSelectedItem();
+                /*
+                 * Barre d'actions.
+                 */
+                HBox actionsGauche = new HBox(
+                                10,
+                                boutonAjouter,
+                                boutonSupprimer);
 
-            if (carteSelectionnee == null) {
-                return;
-            }
+                HBox actionsDroite = new HBox(
+                                boutonSauvegarder);
 
-            Alert confirmation =
-                    new Alert(
-                            Alert.AlertType.CONFIRMATION);
+                actionsDroite.setAlignment(
+                                Pos.CENTER_RIGHT);
 
-            confirmation.setTitle(
-                    "Suppression");
+                BorderPane barreActions = new BorderPane();
 
-            confirmation.setHeaderText(
-                    "Supprimer la carte ?");
+                barreActions.setLeft(
+                                actionsGauche);
 
-            confirmation.setContentText(
-                    carteSelectionnee.getNom());
+                barreActions.setRight(
+                                actionsDroite);
 
-            confirmation.showAndWait()
-                    .ifPresent(reponse -> {
+                barreActions.setPadding(
+                                new Insets(10));
 
-                        if (reponse == ButtonType.OK) {
+                /*
+                 * Mise en page de la fenêtre.
+                 */
+                ScrollPane scrollFormulaire = new ScrollPane(formulaire);
 
-                            deck.getCartes().remove(
-                                    carteSelectionnee);
+                scrollFormulaire.setFitToWidth(true);
 
-                            listeCartes.getItems().remove(
-                                    carteSelectionnee);
+                BorderPane root = new BorderPane();
 
-                            cardService.sauvegarderDeck(
-                                    deck);
-                        }
-                    });
-        });
+                root.setLeft(
+                                listeCartes);
 
-        /*
-         * Sauvegarder la carte sélectionnée.
-         */
-        boutonSauvegarder.setOnAction(event -> {
+                root.setCenter(
+                                scrollFormulaire);
 
-            Card carteSelectionnee =
-                    listeCartes
-                            .getSelectionModel()
-                            .getSelectedItem();
+                root.setBottom(
+                                barreActions);
 
-            if (carteSelectionnee == null) {
-                return;
-            }
+                listeCartes.setPrefWidth(300);
 
-            carteSelectionnee.setNom(
-                    champNom.getText());
+                Scene scene = new Scene(root, 1000, 600);
 
-            try {
+                stage.setTitle(
+                                "Pathfinder Card Studio");
 
-                carteSelectionnee.setNiveau(
-                        Integer.parseInt(
-                                champNiveau.getText()));
+                stage.setScene(scene);
+                stage.show();
+        }
 
-            } catch (NumberFormatException e) {
-
-                Alert erreur =
-                        new Alert(
-                                Alert.AlertType.ERROR);
-
-                erreur.setTitle(
-                        "Niveau invalide");
-
-                erreur.setHeaderText(
-                        "Le niveau doit être un nombre.");
-
-                erreur.showAndWait();
-
-                return;
-            }
-
-            carteSelectionnee.setDescription(
-                    champDescription.getText());
-
-            if (carteSelectionnee
-                    instanceof SpellCard sort) {
-
-                sort.getTraditions().clear();
-
-                sort.setTraits(
-                        champTraits.getText());
-
-                if (champTradition.getValue() != null) {
-
-                    sort.getTraditions().add(
-                            champTradition.getValue());
-                }
-
-                if (champIncantation.getValue() != null) {
-
-                    sort.setCoutIncantation(
-                            champIncantation.getValue());
-                }
-
-                if (champDefense.getValue() != null) {
-
-                    sort.setDefense(
-                            champDefense.getValue());
-                }
-
-                sort.setPortee(
-                        champPortee.getText());
-
-                sort.setDuree(
-                        champDuree.getText());
-            }
-
-            if (carteSelectionnee
-                    instanceof AbilityCard capacite) {
-
-                capacite.setTraits(
-                        champTraitsCapacite.getText());
-
-                if (champCoutAction.getValue() != null) {
-
-                    capacite.setCoutAction(
-                            champCoutAction.getValue());
-                }
-
-                capacite.setPrerequis(
-                        champPrerequis.getText());
-
-                capacite.setDeclencheur(
-                        champDeclencheur.getText());
-            }
-
-            cardService.sauvegarderDeck(
-                    deck);
-
-            listeCartes.refresh();
-        });
-
-        /*
-         * Barre d'actions.
-         */
-        HBox actionsGauche = new HBox(
-                10,
-                boutonAjouter,
-                boutonSupprimer);
-
-        HBox actionsDroite = new HBox(
-                boutonSauvegarder);
-
-        actionsDroite.setAlignment(
-                Pos.CENTER_RIGHT);
-
-        BorderPane barreActions =
-                new BorderPane();
-
-        barreActions.setLeft(
-                actionsGauche);
-
-        barreActions.setRight(
-                actionsDroite);
-
-        barreActions.setPadding(
-                new Insets(10));
-
-        /*
-         * Mise en page de la fenêtre.
-         */
-        ScrollPane scrollFormulaire =
-                new ScrollPane(formulaire);
-
-        scrollFormulaire.setFitToWidth(true);
-
-        BorderPane root =
-                new BorderPane();
-
-        root.setLeft(
-                listeCartes);
-
-        root.setCenter(
-                scrollFormulaire);
-
-        root.setBottom(
-                barreActions);
-
-        listeCartes.setPrefWidth(300);
-
-        Scene scene =
-                new Scene(root, 1000, 600);
-
-        stage.setTitle(
-                "Pathfinder Card Studio");
-
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
+        public static void main(String[] args) {
+                launch(args);
+        }
 }
