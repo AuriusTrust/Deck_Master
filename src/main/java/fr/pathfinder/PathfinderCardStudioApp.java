@@ -14,7 +14,6 @@ import fr.pathfinder.affichage.javafx.SpellForm;
 import fr.pathfinder.affichage.javafx.AbilityForm;
 import fr.pathfinder.affichage.javafx.CardPreviewPane;
 
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -157,12 +156,11 @@ public class PathfinderCardStudioApp extends Application {
                                                                 formulaireCapacite.masquer();
                                                                 formulaireObjet.masquer();
 
-                                                                apercuCarte.afficherCarte("",0,"","","",null,"");
-                                                                
+                                                                apercuCarte.afficherCarte("", 0, "", "", "", null, "");
+
                                                                 boutonSauvegarder.setDisable(true);
                                                                 boutonSupprimer.setDisable(true);
 
-                                                                
                                                                 return;
                                                         }
 
@@ -176,69 +174,9 @@ public class PathfinderCardStudioApp extends Application {
                                                         champDescription.setText(
                                                                         nouvelleCarte.getDescription());
 
-                                                        String tradition = "";
-                                                        String traits = "";
-                                                        String details = "";
-                                                        ActionCost coutAction = ActionCost.AUCUNE;
-
-                                                        if (nouvelleCarte instanceof SpellCard sort) {
-
-                                                                if (!sort.getTraditions().isEmpty()) {
-
-                                                                        tradition = sort.getTraditions()
-                                                                                        .get(0)
-                                                                                        .toString();
-                                                                }
-
-                                                                traits = sort.getTraits();
-                                                                coutAction = sort.getCoutIncantation();
-
-                                                                details = "Portée : "
-                                                                                + valeurOuVide(sort.getPortee())
-                                                                                + "\n"
-                                                                                + "Durée : "
-                                                                                + valeurOuVide(sort.getDuree())
-                                                                                + "\n"
-                                                                                + "Défense : "
-                                                                                + (sort.getDefense() == null
-                                                                                                ? ""
-                                                                                                : sort.getDefense()
-                                                                                                                .toString());
-
-                                                        } else if (nouvelleCarte instanceof AbilityCard capacite) {
-
-                                                                traits = capacite.getTraits();
-                                                                coutAction = capacite.getCoutAction();
-
-                                                                details = "Prérequis : "
-                                                                                + valeurOuVide(capacite.getPrerequis())
-                                                                                + "\n"
-                                                                                + "Déclencheur : "
-                                                                                + valeurOuVide(capacite
-                                                                                                .getDeclencheur());
-
-                                                        } else if (nouvelleCarte instanceof ItemCard objet) {
-
-                                                                traits = objet.getTraits();
-                                                                coutAction = objet.getActivation();
-
-                                                                details = "Prix : "
-                                                                                + valeurOuVide(objet.getPrix())
-                                                                                + "\n"
-                                                                                + "Emplacement : "
-                                                                                + valeurOuVide(objet.getEmplacement());
-                                                        }
-                                                        apercuCarte.afficherFondPour(
-                                                                        nouvelleCarte);
-
-                                                        apercuCarte.afficherCarte(
-                                                                        nouvelleCarte.getNom(),
-                                                                        nouvelleCarte.getNiveau(),
-                                                                        nouvelleCarte.getDescription(),
-                                                                        tradition,
-                                                                        traits,
-                                                                        coutAction,
-                                                                        details);
+                                                        mettreAJourApercu(
+                                                                        nouvelleCarte,
+                                                                        apercuCarte);
 
                                                         if (nouvelleCarte instanceof SpellCard sort) {
 
@@ -458,6 +396,10 @@ public class PathfinderCardStudioApp extends Application {
                                         deck);
 
                         listeCartes.refresh();
+
+                        mettreAJourApercu(
+                                        carteSelectionnee,
+                                        apercuCarte);
                 });
 
                 /*
@@ -513,9 +455,76 @@ public class PathfinderCardStudioApp extends Application {
                 stage.setScene(scene);
                 stage.show();
         }
-        
+
         private String valeurOuVide(String valeur) {
                 return valeur == null ? "" : valeur;
+        }
+
+        private void mettreAJourApercu(
+                        Card carte,
+                        CardPreviewPane apercuCarte) {
+
+                String tradition = "";
+                String traits = "";
+                String details = "";
+                ActionCost coutAction = ActionCost.AUCUNE;
+
+                if (carte instanceof SpellCard sort) {
+
+                        if (!sort.getTraditions().isEmpty()) {
+
+                                tradition = sort.getTraditions()
+                                                .get(0)
+                                                .toString();
+                        }
+
+                        traits = sort.getTraits();
+                        coutAction = sort.getCoutIncantation();
+
+                        details = "Portée : "
+                                        + valeurOuVide(sort.getPortee())
+                                        + " | Durée : "
+                                        + valeurOuVide(sort.getDuree())
+                                        + "\nDéfense : "
+                                        + (sort.getDefense() == null
+                                                        ? ""
+                                                        : sort.getDefense().toString());
+
+                } else if (carte instanceof AbilityCard capacite) {
+
+                        traits = capacite.getTraits();
+                        coutAction = capacite.getCoutAction();
+
+                        details = "Prérequis : "
+                                        + valeurOuVide(
+                                                        capacite.getPrerequis())
+                                        + "\nDéclencheur : "
+                                        + valeurOuVide(
+                                                        capacite.getDeclencheur());
+
+                } else if (carte instanceof ItemCard objet) {
+
+                        traits = objet.getTraits();
+                        coutAction = objet.getActivation();
+
+                        details = "Prix : "
+                                        + valeurOuVide(
+                                                        objet.getPrix())
+                                        + " | Usage : "
+                                        + valeurOuVide(
+                                                        objet.getEmplacement());
+                }
+
+                apercuCarte.afficherFondPour(carte);
+
+                apercuCarte.afficherCarte(
+                                carte.getNom(),
+                                carte.getNiveau(),
+                                carte.getDescription(),
+                                tradition,
+                                traits,
+                                coutAction,
+                                details);
         }
 
         public static void main(String[] args) {
