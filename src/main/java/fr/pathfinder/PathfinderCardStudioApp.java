@@ -10,6 +10,8 @@ import fr.pathfinder.carte.SpellCard;
 import fr.pathfinder.carte.Tradition;
 import fr.pathfinder.service.CardService;
 import fr.pathfinder.affichage.javafx.ItemForm;
+import fr.pathfinder.affichage.javafx.SpellForm;
+import fr.pathfinder.affichage.javafx.AbilityForm;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -85,97 +87,14 @@ public class PathfinderCardStudioApp extends Application {
                 champDescription.setPrefRowCount(10);
 
                 /*
-                 * Champs spécifiques aux sorts.
+                 * Formulaire spécifique aux sorts.
                  */
-                Label labelTradition = new Label("Tradition");
-
-                ComboBox<Tradition> champTradition = new ComboBox<>();
-
-                champTradition.getItems().addAll(
-                                Tradition.values());
-
-                Label labelTraits = new Label("Traits");
-
-                TextField champTraits = new TextField();
-
-                Label labelIncantation = new Label("Temps d'incantation");
-
-                ComboBox<ActionCost> champIncantation = new ComboBox<>();
-
-                champIncantation.getItems().addAll(
-                                ActionCost.values());
-
-                Label labelDefense = new Label("Défense");
-
-                ComboBox<DefenseType> champDefense = new ComboBox<>();
-
-                champDefense.getItems().addAll(
-                                DefenseType.values());
-
-                Label labelPortee = new Label("Portée");
-
-                TextField champPortee = new TextField();
-
-                Label labelDuree = new Label("Durée");
-
-                TextField champDuree = new TextField();
-
-                VBox formulaireSort = new VBox(
-                                10,
-                                labelTradition,
-                                champTradition,
-                                labelTraits,
-                                champTraits,
-                                labelIncantation,
-                                champIncantation,
-                                labelDefense,
-                                champDefense,
-                                labelPortee,
-                                champPortee,
-                                labelDuree,
-                                champDuree);
-
-                formulaireSort.setVisible(false);
-                formulaireSort.setManaged(false);
+                SpellForm formulaireSort = new SpellForm();
 
                 /*
                  * Champs spécifiques aux dons et capacités.
                  */
-                Label labelTraitsCapacite = new Label("Traits");
-
-                TextField champTraitsCapacite = new TextField();
-
-                Label labelCoutAction = new Label("Coût en actions");
-
-                ComboBox<ActionCost> champCoutAction = new ComboBox<>();
-
-                champCoutAction.getItems().addAll(
-                                ActionCost.values());
-
-                Label labelPrerequis = new Label("Prérequis");
-
-                TextField champPrerequis = new TextField();
-
-                Label labelDeclencheur = new Label("Déclencheur");
-
-                TextArea champDeclencheur = new TextArea();
-
-                champDeclencheur.setWrapText(true);
-                champDeclencheur.setPrefRowCount(3);
-
-                VBox formulaireCapacite = new VBox(
-                                10,
-                                labelTraitsCapacite,
-                                champTraitsCapacite,
-                                labelCoutAction,
-                                champCoutAction,
-                                labelPrerequis,
-                                champPrerequis,
-                                labelDeclencheur,
-                                champDeclencheur);
-
-                formulaireCapacite.setVisible(false);
-                formulaireCapacite.setManaged(false);
+                AbilityForm formulaireCapacite = new AbilityForm();
 
                 ItemForm formulaireObjet = new ItemForm();
 
@@ -230,28 +149,12 @@ public class PathfinderCardStudioApp extends Application {
                                                                 champNiveau.clear();
                                                                 champDescription.clear();
 
-                                                                formulaireSort.setVisible(false);
-                                                                formulaireSort.setManaged(false);
-
-                                                                champTradition.setValue(null);
-                                                                champTraits.clear();
-                                                                champIncantation.setValue(null);
-                                                                champDefense.setValue(null);
-                                                                champPortee.clear();
-                                                                champDuree.clear();
-
-                                                                formulaireCapacite.setVisible(false);
-                                                                formulaireCapacite.setManaged(false);
-
-                                                                champTraitsCapacite.clear();
-                                                                champCoutAction.setValue(null);
-                                                                champPrerequis.clear();
-                                                                champDeclencheur.clear();
+                                                                formulaireSort.masquer();
+                                                                formulaireCapacite.masquer();
+                                                                formulaireObjet.masquer();
 
                                                                 boutonSauvegarder.setDisable(true);
                                                                 boutonSupprimer.setDisable(true);
-
-                                                                formulaireObjet.masquer();
 
                                                                 return;
                                                         }
@@ -268,65 +171,24 @@ public class PathfinderCardStudioApp extends Application {
 
                                                         if (nouvelleCarte instanceof SpellCard sort) {
 
-                                                                formulaireSort.setVisible(true);
-                                                                formulaireSort.setManaged(true);
+                                                                formulaireSort.afficher(sort);
 
                                                                 formulaireCapacite.setVisible(false);
                                                                 formulaireCapacite.setManaged(false);
 
                                                                 formulaireObjet.masquer();
 
-                                                                champTraits.setText(
-                                                                                sort.getTraits());
-
-                                                                if (sort.getTraditions().isEmpty()) {
-
-                                                                        champTradition.setValue(null);
-
-                                                                } else {
-
-                                                                        champTradition.setValue(
-                                                                                        sort.getTraditions().get(0));
-                                                                }
-
-                                                                champIncantation.setValue(
-                                                                                sort.getCoutIncantation());
-
-                                                                champDefense.setValue(
-                                                                                sort.getDefense());
-
-                                                                champPortee.setText(
-                                                                                sort.getPortee());
-
-                                                                champDuree.setText(
-                                                                                sort.getDuree());
-
                                                         } else if (nouvelleCarte instanceof AbilityCard capacite) {
 
-                                                                formulaireSort.setVisible(false);
-                                                                formulaireSort.setManaged(false);
+                                                                formulaireSort.masquer();
 
-                                                                formulaireCapacite.setVisible(true);
-                                                                formulaireCapacite.setManaged(true);
+                                                                formulaireCapacite.afficher(capacite);
 
                                                                 formulaireObjet.masquer();
 
-                                                                champTraitsCapacite.setText(
-                                                                                capacite.getTraits());
-
-                                                                champCoutAction.setValue(
-                                                                                capacite.getCoutAction());
-
-                                                                champPrerequis.setText(
-                                                                                capacite.getPrerequis());
-
-                                                                champDeclencheur.setText(
-                                                                                capacite.getDeclencheur());
-
                                                         } else if (nouvelleCarte instanceof ItemCard objet) {
 
-                                                                formulaireSort.setVisible(false);
-                                                                formulaireSort.setManaged(false);
+                                                                formulaireSort.masquer();
 
                                                                 formulaireCapacite.setVisible(false);
                                                                 formulaireCapacite.setManaged(false);
@@ -335,26 +197,13 @@ public class PathfinderCardStudioApp extends Application {
 
                                                         } else {
 
-                                                                formulaireSort.setVisible(false);
-                                                                formulaireSort.setManaged(false);
+                                                                formulaireSort.masquer();
 
-                                                                formulaireCapacite.setVisible(false);
-                                                                formulaireCapacite.setManaged(false);
+                                                                formulaireCapacite.masquer();
 
                                                                 formulaireObjet.masquer();
 
-                                                                champTraits.clear();
-                                                                champTraitsCapacite.clear();
-
-                                                                champTradition.setValue(null);
-                                                                champIncantation.setValue(null);
-                                                                champDefense.setValue(null);
-                                                                champCoutAction.setValue(null);
-
-                                                                champPortee.clear();
-                                                                champDuree.clear();
-                                                                champPrerequis.clear();
-                                                                champDeclencheur.clear();
+                                                                
                                                         }
 
                                                         boutonSauvegarder.setDisable(false);
@@ -520,52 +369,13 @@ public class PathfinderCardStudioApp extends Application {
 
                         if (carteSelectionnee instanceof SpellCard sort) {
 
-                                sort.getTraditions().clear();
-
-                                sort.setTraits(
-                                                champTraits.getText());
-
-                                if (champTradition.getValue() != null) {
-
-                                        sort.getTraditions().add(
-                                                        champTradition.getValue());
-                                }
-
-                                if (champIncantation.getValue() != null) {
-
-                                        sort.setCoutIncantation(
-                                                        champIncantation.getValue());
-                                }
-
-                                if (champDefense.getValue() != null) {
-
-                                        sort.setDefense(
-                                                        champDefense.getValue());
-                                }
-
-                                sort.setPortee(
-                                                champPortee.getText());
-
-                                sort.setDuree(
-                                                champDuree.getText());
+                                formulaireSort.sauvegarderDans(sort);
                         }
 
                         if (carteSelectionnee instanceof AbilityCard capacite) {
 
-                                capacite.setTraits(
-                                                champTraitsCapacite.getText());
-
-                                if (champCoutAction.getValue() != null) {
-
-                                        capacite.setCoutAction(
-                                                        champCoutAction.getValue());
-                                }
-
-                                capacite.setPrerequis(
-                                                champPrerequis.getText());
-
-                                capacite.setDeclencheur(
-                                                champDeclencheur.getText());
+                                formulaireCapacite.sauvegarderDans(
+                                                capacite);
                         }
 
                         if (carteSelectionnee instanceof ItemCard objet) {
