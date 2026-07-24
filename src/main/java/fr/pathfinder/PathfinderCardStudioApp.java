@@ -8,6 +8,8 @@ import fr.pathfinder.carte.DefenseType;
 import fr.pathfinder.carte.ItemCard;
 import fr.pathfinder.carte.SpellCard;
 import fr.pathfinder.carte.Tradition;
+import fr.pathfinder.impression.PrintDeck;
+import fr.pathfinder.impression.PrintDeckEntry;
 import fr.pathfinder.service.CardService;
 import fr.pathfinder.affichage.javafx.ItemForm;
 import fr.pathfinder.affichage.javafx.SpellForm;
@@ -16,7 +18,6 @@ import fr.pathfinder.affichage.javafx.CardPreviewPane;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -41,11 +42,13 @@ public class PathfinderCardStudioApp extends Application {
 
                 CardService cardService = new CardService();
                 Deck deck = cardService.chargerDeck();
+                PrintDeck printDeck = new PrintDeck();
 
                 /*
                  * Liste des cartes.
                  */
                 ListView<Card> listeCartes = new ListView<>();
+                ListView<PrintDeckEntry> listeImpression = new ListView<>();
 
                 listeCartes.getItems().addAll(
                                 deck.getCartes());
@@ -114,6 +117,38 @@ public class PathfinderCardStudioApp extends Application {
 
                 boutonSauvegarder.setDisable(true);
 
+                Button boutonAjouterImpression = new Button("Ajouter au deck");
+
+                boutonAjouterImpression.setDisable(true);
+
+                Button boutonIncrementerImpression = new Button("+");
+                Button boutonDecrementerImpression = new Button("-");
+                Button boutonRetirerImpression = new Button("Retirer du deck");
+
+                boutonIncrementerImpression.setDisable(true);
+                boutonDecrementerImpression.setDisable(true);
+                boutonRetirerImpression.setDisable(true);
+
+                /*
+                 * Les actions sur le deck nécessitent une entrée sélectionnée.
+                 */
+                listeImpression
+                                .getSelectionModel()
+                                .selectedItemProperty()
+                                .addListener((observable, ancienneEntree, nouvelleEntree) -> {
+
+                                        boolean aucuneEntreeSelectionnee = nouvelleEntree == null;
+
+                                        boutonIncrementerImpression.setDisable(
+                                                        aucuneEntreeSelectionnee);
+
+                                        boutonDecrementerImpression.setDisable(
+                                                        aucuneEntreeSelectionnee);
+
+                                        boutonRetirerImpression.setDisable(
+                                                        aucuneEntreeSelectionnee);
+                                });
+
                 /*
                  * Formulaire principal.
                  */
@@ -133,7 +168,7 @@ public class PathfinderCardStudioApp extends Application {
                 formulaire.setPadding(
                                 new Insets(20));
 
-                formulaire.setPrefWidth(600);
+                formulaire.setPrefWidth(500);
 
                 /*
                  * Changement de carte sélectionnée.
@@ -160,6 +195,7 @@ public class PathfinderCardStudioApp extends Application {
 
                                                                 boutonSauvegarder.setDisable(true);
                                                                 boutonSupprimer.setDisable(true);
+                                                                boutonAjouterImpression.setDisable(true);
 
                                                                 return;
                                                         }
@@ -216,6 +252,7 @@ public class PathfinderCardStudioApp extends Application {
 
                                                         boutonSauvegarder.setDisable(false);
                                                         boutonSupprimer.setDisable(false);
+                                                        boutonAjouterImpression.setDisable(false);
                                                 });
 
                 /*
@@ -402,6 +439,99 @@ public class PathfinderCardStudioApp extends Application {
                                         apercuCarte);
                 });
 
+                boutonAjouterImpression.setOnAction(event -> {
+
+                        Card carteSelectionnee = listeCartes
+                                        .getSelectionModel()
+                                        .getSelectedItem();
+
+                        if (carteSelectionnee == null) {
+                                return;
+                        }
+
+                        printDeck.ajouterCarte(
+                                        carteSelectionnee);
+
+                        listeImpression.getItems().setAll(
+                                        printDeck.getEntrees());
+
+                        listeImpression.refresh();
+                });
+
+                /*
+                 * Ajoute un exemplaire à l'entrée sélectionnée dans le deck.
+                 */
+                boutonIncrementerImpression.setOnAction(event -> {
+
+                        PrintDeckEntry entreeSelectionnee = listeImpression
+                                        .getSelectionModel()
+                                        .getSelectedItem();
+
+                        if (entreeSelectionnee == null) {
+                                return;
+                        }
+
+                        printDeck.ajouterCarte(
+                                        entreeSelectionnee.getCarte());
+
+                        listeImpression.getItems().setAll(
+                                        printDeck.getEntrees());
+
+                        listeImpression.getSelectionModel().select(
+                                        entreeSelectionnee);
+
+                        listeImpression.refresh();
+                });
+
+                /*
+                 * Retire un exemplaire et supprime l'entrée à quantité zéro.
+                 */
+                boutonDecrementerImpression.setOnAction(event -> {
+
+                        PrintDeckEntry entreeSelectionnee = listeImpression
+                                        .getSelectionModel()
+                                        .getSelectedItem();
+
+                        if (entreeSelectionnee == null) {
+                                return;
+                        }
+
+                        printDeck.retirerCarte(
+                                        entreeSelectionnee.getCarte());
+
+                        listeImpression.getItems().setAll(
+                                        printDeck.getEntrees());
+
+                        if (printDeck.getEntrees().contains(entreeSelectionnee)) {
+                                listeImpression.getSelectionModel().select(
+                                                entreeSelectionnee);
+                        }
+
+                        listeImpression.refresh();
+                });
+
+                /*
+                 * Supprime toute l'entrée, quelle que soit sa quantité.
+                 */
+                boutonRetirerImpression.setOnAction(event -> {
+
+                        PrintDeckEntry entreeSelectionnee = listeImpression
+                                        .getSelectionModel()
+                                        .getSelectedItem();
+
+                        if (entreeSelectionnee == null) {
+                                return;
+                        }
+
+                        printDeck.supprimerEntree(
+                                        entreeSelectionnee);
+
+                        listeImpression.getItems().setAll(
+                                        printDeck.getEntrees());
+
+                        listeImpression.refresh();
+                });
+
                 /*
                  * Barre d'actions.
                  */
@@ -410,19 +540,10 @@ public class PathfinderCardStudioApp extends Application {
                                 boutonAjouter,
                                 boutonSupprimer);
 
-                HBox actionsDroite = new HBox(
-                                boutonSauvegarder);
-
-                actionsDroite.setAlignment(
-                                Pos.CENTER_RIGHT);
-
                 BorderPane barreActions = new BorderPane();
 
                 barreActions.setLeft(
                                 actionsGauche);
-
-                barreActions.setRight(
-                                actionsDroite);
 
                 barreActions.setPadding(
                                 new Insets(10));
@@ -433,26 +554,96 @@ public class PathfinderCardStudioApp extends Application {
                 ScrollPane scrollFormulaire = new ScrollPane(formulaire);
 
                 scrollFormulaire.setFitToWidth(true);
+                scrollFormulaire.setPrefWidth(500);
+
+                Label titreDeckImpression = new Label("Deck d'impression");
+
+                listeImpression.setCellFactory(param -> new ListCell<>() {
+
+                        @Override
+                        protected void updateItem(
+                                        PrintDeckEntry entree,
+                                        boolean empty) {
+
+                                super.updateItem(entree, empty);
+
+                                setText(empty || entree == null
+                                                ? null
+                                                : entree.getCarte().getNom()
+                                                                + " x"
+                                                                + entree.getQuantite());
+                        }
+                });
+
+                HBox actionsDeckImpression = new HBox(
+                                10,
+                                boutonIncrementerImpression,
+                                boutonDecrementerImpression,
+                                boutonRetirerImpression);
+
+                /*
+                 * En-tête du deck : titre à gauche et actions à droite.
+                 */
+                BorderPane enteteDeckImpression = new BorderPane();
+
+                enteteDeckImpression.setLeft(
+                                titreDeckImpression);
+
+                enteteDeckImpression.setRight(
+                                actionsDeckImpression);
+
+                /*
+                 * Colonne du deck d'impression, placée à droite de l'aperçu.
+                 */
+                VBox panneauDeckImpression = new VBox(
+                                10,
+                                enteteDeckImpression,
+                                listeImpression);
+
+                panneauDeckImpression.setPrefWidth(380);
+                panneauDeckImpression.setMinWidth(380);
+
+                /*
+                 * Actions liées à la carte affichée dans l'aperçu.
+                 */
+                HBox actionsApercu = new HBox(
+                                10,
+                                boutonSauvegarder,
+                                boutonAjouterImpression);
+
+                VBox panneauApercu = new VBox(
+                                10,
+                                apercuCarte,
+                                actionsApercu);
+
+                HBox panneauDroit = new HBox(
+                                10,
+                                panneauApercu,
+                                panneauDeckImpression);
+
+                panneauDroit.setPadding(new Insets(10));
+                panneauDroit.setMinWidth(760);
 
                 BorderPane root = new BorderPane();
 
                 root.setLeft(listeCartes);
                 root.setCenter(scrollFormulaire);
-                root.setRight(apercuCarte);
+                root.setRight(panneauDroit);
                 root.setBottom(barreActions);
 
-                BorderPane.setMargin(
-                                apercuCarte,
-                                new Insets(20));
+                listeCartes.setPrefWidth(250);
+                listeImpression.setPrefWidth(380);
+                listeImpression.setMinWidth(380);
+                listeImpression.setPrefHeight(180);
 
-                listeCartes.setPrefWidth(300);
-
-                Scene scene = new Scene(root, 1000, 600);
+                Scene scene = new Scene(root, 1450, 750);
 
                 stage.setTitle(
                                 "Pathfinder Card Studio");
 
                 stage.setScene(scene);
+                stage.setMinWidth(1200);
+                stage.setMinHeight(700);
                 stage.show();
         }
 

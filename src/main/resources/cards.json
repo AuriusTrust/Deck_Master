@@ -125,5 +125,26 @@
     "prerequis" : "",
     "declencheur" : "",
     "coutAction" : "TROIS_ACTIONS"
+  }, {
+    "type" : "SORT",
+    "nom" : "Nouveau sort",
+    "niveau" : 1,
+    "description" : "",
+    "ecole" : "",
+    "traditions" : null,
+    "traits" : "",
+    "coutIncantation" : "AUCUNE",
+    "defense" : "AUCUNE",
+    "portee" : "",
+    "duree" : "",
+    "emplacement" : null,
+    "prixObjet" : null,
+    "traitsObjet" : null,
+    "activationObjet" : null,
+    "actions" : null,
+    "traitsCapacite" : null,
+    "prerequis" : null,
+    "declencheur" : null,
+    "coutAction" : null
   } ]
 }
