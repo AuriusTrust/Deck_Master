@@ -1,13 +1,11 @@
 package fr.pathfinder;
 
 import fr.pathfinder.carte.AbilityCard;
-import fr.pathfinder.carte.ActionCost;
 import fr.pathfinder.carte.Card;
 import fr.pathfinder.carte.Deck;
-import fr.pathfinder.carte.DefenseType;
 import fr.pathfinder.carte.ItemCard;
 import fr.pathfinder.carte.SpellCard;
-import fr.pathfinder.carte.Tradition;
+import fr.pathfinder.impression.PdfExporter;
 import fr.pathfinder.impression.PrintDeck;
 import fr.pathfinder.impression.PrintDeckEntry;
 import fr.pathfinder.service.CardService;
@@ -36,6 +34,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
@@ -52,6 +51,7 @@ public class PathfinderCardStudioApp extends Application {
                 CardService cardService = new CardService();
                 Deck deck = cardService.chargerDeck();
                 PrintDeck printDeck = new PrintDeck();
+                PdfExporter pdfExporter = new PdfExporter();
 
                 /*
                  * Liste des cartes.
@@ -137,6 +137,7 @@ public class PathfinderCardStudioApp extends Application {
                 Button boutonIncrementerImpression = new Button("+");
                 Button boutonDecrementerImpression = new Button("-");
                 Button boutonRetirerImpression = new Button("Retirer du deck");
+                Button boutonExporterPdf = new Button("Exporter PDF");
 
                 boutonIncrementerImpression.setDisable(true);
                 boutonDecrementerImpression.setDisable(true);
@@ -224,9 +225,8 @@ public class PathfinderCardStudioApp extends Application {
                                                         champDescription.setText(
                                                                         nouvelleCarte.getDescription());
 
-                                                        mettreAJourApercu(
-                                                                        nouvelleCarte,
-                                                                        apercuCarte);
+                                                        apercuCarte.afficherCarte(
+                                                                        nouvelleCarte);
 
                                                         apercuVerso.afficherVerso(
                                                                         nouvelleCarte);
@@ -451,9 +451,8 @@ public class PathfinderCardStudioApp extends Application {
 
                         listeCartes.refresh();
 
-                        mettreAJourApercu(
-                                        carteSelectionnee,
-                                        apercuCarte);
+                        apercuCarte.afficherCarte(
+                                        carteSelectionnee);
                 });
 
                 boutonAjouterImpression.setOnAction(event -> {
@@ -550,6 +549,61 @@ public class PathfinderCardStudioApp extends Application {
                 });
 
                 /*
+                 * Choisit le fichier de sortie puis délègue toute la génération
+                 * du document à PdfExporter.
+                 */
+                boutonExporterPdf.setOnAction(event -> {
+
+                        FileChooser selecteurFichier = new FileChooser();
+
+                        selecteurFichier.setTitle(
+                                        "Exporter le deck en PDF");
+
+                        selecteurFichier.setInitialFileName(
+                                        "deck-impression.pdf");
+
+                        selecteurFichier.getExtensionFilters().add(
+                                        new FileChooser.ExtensionFilter(
+                                                        "Document PDF",
+                                                        "*.pdf"));
+
+                        java.io.File fichierSortie = selecteurFichier
+                                        .showSaveDialog(stage);
+
+                        if (fichierSortie == null) {
+                                return;
+                        }
+
+                        try {
+                                pdfExporter.exporter(
+                                                printDeck,
+                                                fichierSortie.toPath());
+
+                                Alert confirmation = new Alert(
+                                                Alert.AlertType.INFORMATION);
+
+                                confirmation.setTitle("Export PDF");
+                                confirmation.setHeaderText(
+                                                "Export terminé");
+                                confirmation.setContentText(
+                                                fichierSortie.getAbsolutePath());
+                                confirmation.showAndWait();
+
+                        } catch (Exception exception) {
+
+                                Alert erreur = new Alert(
+                                                Alert.AlertType.ERROR);
+
+                                erreur.setTitle("Export PDF");
+                                erreur.setHeaderText(
+                                                "Impossible de générer le PDF");
+                                erreur.setContentText(
+                                                exception.getMessage());
+                                erreur.showAndWait();
+                        }
+                });
+
+                /*
                  * Barre d'actions.
                  */
                 HBox actionsGauche = new HBox(
@@ -615,7 +669,8 @@ public class PathfinderCardStudioApp extends Application {
                 VBox panneauDeckImpression = new VBox(
                                 10,
                                 enteteDeckImpression,
-                                listeImpression);
+                                listeImpression,
+                                boutonExporterPdf);
 
                 panneauDeckImpression.setPrefWidth(380);
                 panneauDeckImpression.setMinWidth(380);
@@ -693,77 +748,6 @@ public class PathfinderCardStudioApp extends Application {
                 stage.setMinWidth(1200);
                 stage.setMinHeight(700);
                 stage.show();
-        }
-
-        private String valeurOuVide(String valeur) {
-                return valeur == null ? "" : valeur;
-        }
-
-        private void mettreAJourApercu(
-                        Card carte,
-                        CardPreviewPane apercuCarte) {
-
-                String tradition = "";
-                String traits = "";
-                String details = "";
-                ActionCost coutAction = ActionCost.AUCUNE;
-
-                if (carte instanceof SpellCard sort) {
-
-                        if (!sort.getTraditions().isEmpty()) {
-
-                                tradition = sort.getTraditions()
-                                                .get(0)
-                                                .toString();
-                        }
-
-                        traits = sort.getTraits();
-                        coutAction = sort.getCoutIncantation();
-
-                        details = "Portée : "
-                                        + valeurOuVide(sort.getPortee())
-                                        + " | Durée : "
-                                        + valeurOuVide(sort.getDuree())
-                                        + "\nDéfense : "
-                                        + (sort.getDefense() == null
-                                                        ? ""
-                                                        : sort.getDefense().toString());
-
-                } else if (carte instanceof AbilityCard capacite) {
-
-                        traits = capacite.getTraits();
-                        coutAction = capacite.getCoutAction();
-
-                        details = "Prérequis : "
-                                        + valeurOuVide(
-                                                        capacite.getPrerequis())
-                                        + "\nDéclencheur : "
-                                        + valeurOuVide(
-                                                        capacite.getDeclencheur());
-
-                } else if (carte instanceof ItemCard objet) {
-
-                        traits = objet.getTraits();
-                        coutAction = objet.getActivation();
-
-                        details = "Prix : "
-                                        + valeurOuVide(
-                                                        objet.getPrix())
-                                        + " | Usage : "
-                                        + valeurOuVide(
-                                                        objet.getEmplacement());
-                }
-
-                apercuCarte.afficherFondPour(carte);
-
-                apercuCarte.afficherCarte(
-                                carte.getNom(),
-                                carte.getNiveau(),
-                                carte.getDescription(),
-                                tradition,
-                                traits,
-                                coutAction,
-                                details);
         }
 
         public static void main(String[] args) {

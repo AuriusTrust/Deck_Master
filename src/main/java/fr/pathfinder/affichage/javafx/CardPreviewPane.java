@@ -267,6 +267,81 @@ public class CardPreviewPane extends Pane {
                                 details == null ? "" : details);
         }
 
+        /**
+         * Configure l'aperçu complet à partir d'une carte métier.
+         *
+         * @param carte carte à représenter
+         */
+        public void afficherCarte(Card carte) {
+
+                if (carte == null) {
+                        afficherCarte("", 0, "", "", "", null, "");
+                        afficherFondPour(null);
+                        return;
+                }
+
+                String tradition = "";
+                String traits = "";
+                String details = "";
+                ActionCost coutAction = ActionCost.AUCUNE;
+
+                if (carte instanceof SpellCard sort) {
+
+                        if (!sort.getTraditions().isEmpty()) {
+                                tradition = sort.getTraditions()
+                                                .get(0)
+                                                .toString();
+                        }
+
+                        traits = sort.getTraits();
+                        coutAction = sort.getCoutIncantation();
+
+                        details = "Portée : "
+                                        + valeurOuVide(sort.getPortee())
+                                        + " | Durée : "
+                                        + valeurOuVide(sort.getDuree())
+                                        + "\nDéfense : "
+                                        + (sort.getDefense() == null
+                                                        ? ""
+                                                        : sort.getDefense().toString());
+
+                } else if (carte instanceof AbilityCard capacite) {
+
+                        traits = capacite.getTraits();
+                        coutAction = capacite.getCoutAction();
+
+                        details = "Prérequis : "
+                                        + valeurOuVide(capacite.getPrerequis())
+                                        + "\nDéclencheur : "
+                                        + valeurOuVide(capacite.getDeclencheur());
+
+                } else if (carte instanceof ItemCard objet) {
+
+                        traits = objet.getTraits();
+                        coutAction = objet.getActivation();
+
+                        details = "Prix : "
+                                        + valeurOuVide(objet.getPrix())
+                                        + " | Usage : "
+                                        + valeurOuVide(objet.getEmplacement());
+                }
+
+                afficherFondPour(carte);
+
+                afficherCarte(
+                                carte.getNom(),
+                                carte.getNiveau(),
+                                carte.getDescription(),
+                                tradition,
+                                traits,
+                                coutAction,
+                                details);
+        }
+
+        private String valeurOuVide(String valeur) {
+                return valeur == null ? "" : valeur;
+        }
+
         private String symboleAction(
                         ActionCost coutAction) {
 
