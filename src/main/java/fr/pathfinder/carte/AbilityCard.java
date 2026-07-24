@@ -1,5 +1,8 @@
 package fr.pathfinder.carte;
 
+/**
+ * Carte représentant un don ou une capacité.
+ */
 public class AbilityCard extends Card {
 
     private String traits;

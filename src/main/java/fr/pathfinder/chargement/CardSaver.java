@@ -14,8 +14,16 @@ import java.io.Writer;
 
 import fr.pathfinder.carte.*;
 
+/**
+ * Sérialise le catalogue de cartes dans le fichier JSON de l'application.
+ */
 public class CardSaver {
 
+    /**
+     * Convertit les cartes en données sérialisables et écrit le fichier JSON.
+     *
+     * @param deck catalogue à sauvegarder
+     */
     public void sauvegarder(Deck deck) {
 
         try {

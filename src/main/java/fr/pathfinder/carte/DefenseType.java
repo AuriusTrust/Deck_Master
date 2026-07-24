@@ -1,5 +1,8 @@
 package fr.pathfinder.carte;
 
+/**
+ * Défenses pouvant être ciblées par un sort.
+ */
 public enum DefenseType {
 
     AUCUNE("Aucune"),

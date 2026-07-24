@@ -1,5 +1,8 @@
 package fr.pathfinder.carte;
 
+/**
+ * Traditions magiques auxquelles un sort peut appartenir.
+ */
 public enum Tradition {
 
     ARCANIQUE("Arcanique"),

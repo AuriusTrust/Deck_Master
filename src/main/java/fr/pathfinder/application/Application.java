@@ -4,8 +4,14 @@ import fr.pathfinder.affichage.Menu;
 import fr.pathfinder.carte.Deck;
 import fr.pathfinder.service.CardService;
 
+/**
+ * Coordonne le démarrage de l'ancienne interface console.
+ */
 public class Application {
 
+    /**
+     * Charge le catalogue puis démarre la boucle du menu console.
+     */
     public void demarrer() {
 
         afficherTitre();

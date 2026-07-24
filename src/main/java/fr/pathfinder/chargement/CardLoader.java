@@ -13,8 +13,16 @@ import fr.pathfinder.carte.ItemCard;
 import fr.pathfinder.carte.SpellCard;
 import fr.pathfinder.carte.Tradition;
 
+/**
+ * Charge le catalogue JSON et reconstruit les différents types de cartes.
+ */
 public class CardLoader {
 
+    /**
+     * Lit les données JSON et instancie les sous-types de cartes appropriés.
+     *
+     * @return deck chargé, vide lorsque la source ne contient aucune carte
+     */
     public Deck chargerCartes() {
 
         Deck deck = new Deck();

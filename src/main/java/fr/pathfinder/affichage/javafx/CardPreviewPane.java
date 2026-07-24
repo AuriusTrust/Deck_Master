@@ -22,6 +22,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
+/**
+ * Composant JavaFX chargé de dessiner l'aperçu visuel d'une carte.
+ */
 public class CardPreviewPane extends Pane {
 
         private static final double LARGEUR_CARTE = 350;
@@ -220,6 +223,9 @@ public class CardPreviewPane extends Pane {
                 detailsCarte.toFront();
         }
 
+        /**
+         * Met à jour tous les textes et indicateurs visibles dans l'aperçu.
+         */
         public void afficherCarte(
                         String titre,
                         int niveau,
@@ -280,6 +286,11 @@ public class CardPreviewPane extends Pane {
                 };
         }
 
+        /**
+         * Sélectionne le fond graphique correspondant au type concret de la carte.
+         *
+         * @param carte carte dont le type détermine le fond
+         */
         public void afficherFondPour(
                         Card carte) {
 

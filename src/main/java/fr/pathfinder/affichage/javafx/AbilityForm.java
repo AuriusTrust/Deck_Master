@@ -9,6 +9,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
+/**
+ * Formulaire JavaFX dédié aux propriétés d'une carte de capacité.
+ */
 public class AbilityForm extends VBox {
 
     private final TextField champTraits;
@@ -69,6 +72,11 @@ public class AbilityForm extends VBox {
         masquer();
     }
 
+    /**
+     * Charge les propriétés d'une capacité dans les champs du formulaire.
+     *
+     * @param capacite capacité à afficher
+     */
     public void afficher(
             AbilityCard capacite) {
 
@@ -91,6 +99,11 @@ public class AbilityForm extends VBox {
         setManaged(true);
     }
 
+    /**
+     * Recopie les valeurs saisies dans la carte fournie.
+     *
+     * @param capacite capacité à mettre à jour
+     */
     public void sauvegarderDans(
             AbilityCard capacite) {
 
@@ -109,6 +122,9 @@ public class AbilityForm extends VBox {
                 champDeclencheur.getText());
     }
 
+    /**
+     * Masque le formulaire lorsqu'une autre catégorie de carte est sélectionnée.
+     */
     public void masquer() {
 
         vider();

@@ -10,6 +10,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
+/**
+ * Formulaire JavaFX dédié aux propriétés d'une carte de sort.
+ */
 public class SpellForm extends VBox {
 
     private final ComboBox<Tradition> champTradition;
@@ -94,6 +97,11 @@ public class SpellForm extends VBox {
         masquer();
     }
 
+    /**
+     * Charge les propriétés d'un sort dans les champs du formulaire.
+     *
+     * @param sort sort à afficher
+     */
     public void afficher(SpellCard sort) {
 
         champTraits.setText(
@@ -125,6 +133,11 @@ public class SpellForm extends VBox {
         setManaged(true);
     }
 
+    /**
+     * Recopie les valeurs saisies dans la carte fournie.
+     *
+     * @param sort sort à mettre à jour
+     */
     public void sauvegarderDans(
             SpellCard sort) {
 
@@ -156,6 +169,9 @@ public class SpellForm extends VBox {
                 champDuree.getText());
     }
 
+    /**
+     * Masque le formulaire lorsqu'une autre catégorie de carte est sélectionnée.
+     */
     public void masquer() {
 
         vider();

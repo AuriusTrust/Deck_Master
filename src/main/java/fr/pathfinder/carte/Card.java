@@ -1,5 +1,8 @@
 package fr.pathfinder.carte;
 
+/**
+ * Base commune à toutes les cartes manipulées par l'application.
+ */
 public abstract class Card {
 
     private String nom;
@@ -41,6 +44,10 @@ public abstract class Card {
     public void setDescription(String description) {
         this.description = description;
     }
-    // Chaque carte devra savoir s'afficher elle-même
+    /**
+     * Produit une description textuelle adaptée au type concret de la carte.
+     *
+     * @return détails formatés de la carte
+     */
     public abstract String afficherDetails();
 }

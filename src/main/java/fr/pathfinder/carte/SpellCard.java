@@ -3,6 +3,9 @@ package fr.pathfinder.carte;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Carte représentant un sort et ses propriétés d'incantation.
+ */
 public class SpellCard extends Card {
 
     /*

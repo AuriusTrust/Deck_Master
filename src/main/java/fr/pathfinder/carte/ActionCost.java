@@ -1,5 +1,8 @@
 package fr.pathfinder.carte;
 
+/**
+ * Coûts d'action affichables pour une carte.
+ */
 public enum ActionCost {
 
     AUCUNE("Aucune"),

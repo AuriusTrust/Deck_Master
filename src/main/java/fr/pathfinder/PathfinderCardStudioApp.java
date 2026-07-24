@@ -14,6 +14,7 @@ import fr.pathfinder.service.CardService;
 import fr.pathfinder.affichage.javafx.ItemForm;
 import fr.pathfinder.affichage.javafx.SpellForm;
 import fr.pathfinder.affichage.javafx.AbilityForm;
+import fr.pathfinder.affichage.javafx.CardBackPreviewPane;
 import fr.pathfinder.affichage.javafx.CardPreviewPane;
 
 import javafx.application.Application;
@@ -32,9 +33,16 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/**
+ * Interface graphique principale de Pathfinder Card Studio.
+ *
+ * <p>Elle coordonne le catalogue, les formulaires d'édition, l'aperçu
+ * et la préparation du deck d'impression.</p>
+ */
 public class PathfinderCardStudioApp extends Application {
 
         @Override
@@ -103,6 +111,7 @@ public class PathfinderCardStudioApp extends Application {
                 ItemForm formulaireObjet = new ItemForm();
 
                 CardPreviewPane apercuCarte = new CardPreviewPane();
+                CardBackPreviewPane apercuVerso = new CardBackPreviewPane();
 
                 /*
                  * Boutons.
@@ -116,6 +125,9 @@ public class PathfinderCardStudioApp extends Application {
                 Button boutonSauvegarder = new Button("Sauvegarder");
 
                 boutonSauvegarder.setDisable(true);
+
+                Button boutonRecto = new Button("Recto");
+                Button boutonVerso = new Button("Verso");
 
                 Button boutonAjouterImpression = new Button("Ajouter au deck");
 
@@ -192,6 +204,7 @@ public class PathfinderCardStudioApp extends Application {
                                                                 formulaireObjet.masquer();
 
                                                                 apercuCarte.afficherCarte("", 0, "", "", "", null, "");
+                                                                apercuVerso.afficherVerso(null);
 
                                                                 boutonSauvegarder.setDisable(true);
                                                                 boutonSupprimer.setDisable(true);
@@ -213,6 +226,9 @@ public class PathfinderCardStudioApp extends Application {
                                                         mettreAJourApercu(
                                                                         nouvelleCarte,
                                                                         apercuCarte);
+
+                                                        apercuVerso.afficherVerso(
+                                                                        nouvelleCarte);
 
                                                         if (nouvelleCarte instanceof SpellCard sort) {
 
@@ -611,9 +627,35 @@ public class PathfinderCardStudioApp extends Application {
                                 boutonSauvegarder,
                                 boutonAjouterImpression);
 
+                HBox choixFaceApercu = new HBox(
+                                10,
+                                boutonRecto,
+                                boutonVerso);
+
+                StackPane conteneurApercu = new StackPane(
+                                apercuCarte,
+                                apercuVerso);
+
+                /*
+                 * Le recto est visible au démarrage. Le basculement ne modifie
+                 * que la vue affichée et n'altère aucune donnée de la carte.
+                 */
+                apercuVerso.setVisible(false);
+
+                boutonRecto.setOnAction(event -> {
+                        apercuCarte.setVisible(true);
+                        apercuVerso.setVisible(false);
+                });
+
+                boutonVerso.setOnAction(event -> {
+                        apercuCarte.setVisible(false);
+                        apercuVerso.setVisible(true);
+                });
+
                 VBox panneauApercu = new VBox(
                                 10,
-                                apercuCarte,
+                                choixFaceApercu,
+                                conteneurApercu,
                                 actionsApercu);
 
                 HBox panneauDroit = new HBox(

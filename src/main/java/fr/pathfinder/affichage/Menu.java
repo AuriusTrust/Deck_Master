@@ -9,6 +9,9 @@ import fr.pathfinder.carte.ItemCard;
 import fr.pathfinder.carte.SpellCard;
 import fr.pathfinder.service.CardService;
 
+/**
+ * Interface console permettant de consulter et modifier un deck de cartes.
+ */
 public class Menu {
 
     private final Scanner scanner;
@@ -19,6 +22,9 @@ public class Menu {
                 System.in);
     }
 
+    /**
+     * Affiche le bandeau d'accueil de l'interface console.
+     */
     public void afficherBienvenue() {
 
         System.out.println(
@@ -48,6 +54,12 @@ public class Menu {
 
     }
 
+    /**
+     * Exécute la boucle interactive principale.
+     *
+     * @param deck catalogue manipulé
+     * @param cardService service utilisé pour persister les changements
+     */
     public void lancerMenu(Deck deck, CardService cardService) {
 
         boolean quitter = false;
@@ -149,6 +161,11 @@ public class Menu {
 
     }
 
+    /**
+     * Affiche les cartes du catalogue avec leur index.
+     *
+     * @param deck catalogue à parcourir
+     */
     public void afficherCartes(Deck deck) {
 
         for (Card carte : deck.getCartes()) {

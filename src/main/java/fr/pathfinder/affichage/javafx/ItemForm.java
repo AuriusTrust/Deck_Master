@@ -8,6 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
+/**
+ * Formulaire JavaFX dédié aux propriétés d'une carte d'objet.
+ */
 public class ItemForm extends VBox {
 
     private final TextField champPrix;
@@ -68,6 +71,11 @@ public class ItemForm extends VBox {
         masquer();
     }
 
+    /**
+     * Charge les propriétés d'un objet dans les champs du formulaire.
+     *
+     * @param objet objet à afficher
+     */
     public void afficher(ItemCard objet) {
 
         champPrix.setText(
@@ -86,6 +94,11 @@ public class ItemForm extends VBox {
         setManaged(true);
     }
 
+    /**
+     * Recopie les valeurs saisies dans la carte fournie.
+     *
+     * @param objet objet à mettre à jour
+     */
     public void sauvegarderDans(
             ItemCard objet) {
 
@@ -104,6 +117,9 @@ public class ItemForm extends VBox {
                 champEmplacement.getText());
     }
 
+    /**
+     * Masque le formulaire lorsqu'une autre catégorie de carte est sélectionnée.
+     */
     public void masquer() {
 
         vider();

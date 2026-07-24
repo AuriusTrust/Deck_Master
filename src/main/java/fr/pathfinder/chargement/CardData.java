@@ -2,6 +2,11 @@ package fr.pathfinder.chargement;
 
 import java.util.List;
 
+/**
+ * Représentation sérialisable d'une carte dans le fichier JSON.
+ *
+ * <p>Les champs optionnels dépendent du type de carte concerné.</p>
+ */
 public class CardData {
 
     public String type;

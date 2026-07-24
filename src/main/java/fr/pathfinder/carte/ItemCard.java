@@ -1,5 +1,8 @@
 package fr.pathfinder.carte;
 
+/**
+ * Carte représentant un objet et ses propriétés d'activation.
+ */
 public class ItemCard extends Card {
 
     private String emplacement;
