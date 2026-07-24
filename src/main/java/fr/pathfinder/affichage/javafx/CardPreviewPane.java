@@ -2,6 +2,7 @@ package fr.pathfinder.affichage.javafx;
 
 import fr.pathfinder.carte.AbilityCard;
 import fr.pathfinder.carte.ActionCost;
+import fr.pathfinder.carte.DefenseType;
 import fr.pathfinder.carte.ItemCard;
 import fr.pathfinder.carte.SpellCard;
 import fr.pathfinder.carte.AbilityCard;
@@ -10,11 +11,16 @@ import fr.pathfinder.carte.ItemCard;
 import fr.pathfinder.carte.SpellCard;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.pathfinder.carte.ActionCost;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.text.Font;
@@ -29,6 +35,13 @@ public class CardPreviewPane extends Pane {
 
         private static final double LARGEUR_CARTE = 350;
         private static final double HAUTEUR_CARTE = 490;
+        private static final double LARGEUR_CONTENU = 316;
+        private static final double LARGEUR_DESCRIPTION = 306;
+        private static final double LARGEUR_ACTIONS = 80;
+        private static final double LARGEUR_DETAILS =
+                        LARGEUR_CONTENU - LARGEUR_ACTIONS;
+        private static final double HAUTEUR_LIGNE_DETAILS = 42;
+        private static final double ESPACEMENT_CONTENU = 5;
 
         private static final String IMAGE_SORT = "/assets/cards/card_sort.png";
 
@@ -44,6 +57,8 @@ public class CardPreviewPane extends Pane {
         private final Label actionsCarte;
         private final ImageView fondCarte;
         private final Label detailsCarte;
+        private final HBox ligneDetailsActions;
+        private final VBox contenuDynamique;
 
         private Font policeTitre;
 
@@ -162,11 +177,10 @@ public class CardPreviewPane extends Pane {
                                                 FontWeight.BOLD,
                                                 20));
 
-                actionsCarte.setLayoutX(266);
-                actionsCarte.setLayoutY(58);
-
                 actionsCarte.setPrefWidth(80);
                 actionsCarte.setPrefHeight(28);
+                actionsCarte.setMinWidth(LARGEUR_ACTIONS);
+                actionsCarte.setMaxWidth(LARGEUR_ACTIONS);
 
                 actionsCarte.setAlignment(Pos.CENTER);
 
@@ -182,27 +196,27 @@ public class CardPreviewPane extends Pane {
                 actionsCarte.setTextOverrun(
                                 javafx.scene.control.OverrunStyle.CLIP);
 
-                descriptionCarte.setLayoutX(30);
-                descriptionCarte.setLayoutY(105);
-
-                descriptionCarte.setPrefWidth(306);
-                descriptionCarte.setPrefHeight(327);
-
                 descriptionCarte.setWrapText(true);
                 descriptionCarte.setAlignment(Pos.TOP_LEFT);
+                descriptionCarte.setMinHeight(0);
+                descriptionCarte.setMaxWidth(LARGEUR_DESCRIPTION);
+                descriptionCarte.setMaxHeight(Double.MAX_VALUE);
+                descriptionCarte.setTextOverrun(
+                                javafx.scene.control.OverrunStyle.CLIP);
 
                 descriptionCarte.setFont(
                                 Font.font(
                                                 "Serif",
                                                 14));
 
-                detailsCarte.setLayoutX(30);
-                detailsCarte.setLayoutY(58);
-
-                detailsCarte.setPrefWidth(306);
-                detailsCarte.setPrefHeight(42);
-
                 detailsCarte.setWrapText(true);
+                detailsCarte.setMinWidth(0);
+                detailsCarte.setPrefWidth(LARGEUR_DETAILS);
+                detailsCarte.setMaxWidth(LARGEUR_DETAILS);
+                detailsCarte.setMinHeight(
+                                javafx.scene.layout.Region.USE_PREF_SIZE);
+                detailsCarte.setTextOverrun(
+                                javafx.scene.control.OverrunStyle.CLIP);
 
                 detailsCarte.setTextFill(
                                 Color.web("#5A3A00"));
@@ -210,17 +224,50 @@ public class CardPreviewPane extends Pane {
                 detailsCarte.setFont(
                                 Font.font(
                                                 "Arial",
-                                                FontWeight.BOLD,
-                                                11));
+                                FontWeight.BOLD,
+                                11));
+
+                /*
+                 * Les détails occupent uniquement l'espace situé à gauche
+                 * des symboles d'actions. La ligne grandit verticalement
+                 * lorsque le texte nécessite davantage de lignes.
+                 */
+                ligneDetailsActions = new HBox(
+                                detailsCarte,
+                                actionsCarte);
+                ligneDetailsActions.setMinHeight(
+                                HAUTEUR_LIGNE_DETAILS);
+                ligneDetailsActions.setPrefWidth(
+                                LARGEUR_CONTENU);
+
+                HBox.setHgrow(
+                                detailsCarte,
+                                Priority.ALWAYS);
+
+                /*
+                 * La description suit automatiquement la hauteur calculée
+                 * de la ligne précédente et utilise tout l'espace restant.
+                 */
+                contenuDynamique = new VBox(
+                                ESPACEMENT_CONTENU,
+                                ligneDetailsActions,
+                                descriptionCarte);
+                contenuDynamique.setLayoutX(30);
+                contenuDynamique.setLayoutY(58);
+                contenuDynamique.setPrefWidth(
+                                LARGEUR_CONTENU);
+                contenuDynamique.setPrefHeight(374);
+                contenuDynamique.setFillWidth(true);
+
+                VBox.setVgrow(
+                                descriptionCarte,
+                                Priority.ALWAYS);
 
                 getChildren().add(fondCarte);
                 getChildren().add(titreCarte);
                 getChildren().add(traitsCarte);
-                getChildren().add(actionsCarte);
                 getChildren().add(niveauCarte);
-                getChildren().add(descriptionCarte);
-                getChildren().add(detailsCarte);
-                detailsCarte.toFront();
+                getChildren().add(contenuDynamique);
         }
 
         /**
@@ -296,34 +343,70 @@ public class CardPreviewPane extends Pane {
                         traits = sort.getTraits();
                         coutAction = sort.getCoutIncantation();
 
-                        details = "Portée : "
-                                        + valeurOuVide(sort.getPortee())
-                                        + " | Durée : "
-                                        + valeurOuVide(sort.getDuree())
-                                        + "\nDéfense : "
-                                        + (sort.getDefense() == null
-                                                        ? ""
-                                                        : sort.getDefense().toString());
+                        List<String> lignePrincipale = new ArrayList<>();
+                        ajouterInformation(
+                                        lignePrincipale,
+                                        "Portée",
+                                        sort.getPortee());
+                        ajouterInformation(
+                                        lignePrincipale,
+                                        "Durée",
+                                        sort.getDuree());
+
+                        List<String> lignes = new ArrayList<>();
+
+                        if (!lignePrincipale.isEmpty()) {
+                                lignes.add(
+                                                String.join(
+                                                                " | ",
+                                                                lignePrincipale));
+                        }
+
+                        if (sort.getDefense() != null
+                                        && sort.getDefense()
+                                                        != DefenseType.AUCUNE) {
+                                lignes.add(
+                                                "Défense : "
+                                                                + sort.getDefense());
+                        }
+
+                        details = String.join("\n", lignes);
 
                 } else if (carte instanceof AbilityCard capacite) {
 
                         traits = capacite.getTraits();
                         coutAction = capacite.getCoutAction();
 
-                        details = "Prérequis : "
-                                        + valeurOuVide(capacite.getPrerequis())
-                                        + "\nDéclencheur : "
-                                        + valeurOuVide(capacite.getDeclencheur());
+                        List<String> lignes = new ArrayList<>();
+                        ajouterInformation(
+                                        lignes,
+                                        "Prérequis",
+                                        capacite.getPrerequis());
+                        ajouterInformation(
+                                        lignes,
+                                        "Déclencheur",
+                                        capacite.getDeclencheur());
+
+                        details = String.join("\n", lignes);
 
                 } else if (carte instanceof ItemCard objet) {
 
                         traits = objet.getTraits();
                         coutAction = objet.getActivation();
 
-                        details = "Prix : "
-                                        + valeurOuVide(objet.getPrix())
-                                        + " | Usage : "
-                                        + valeurOuVide(objet.getEmplacement());
+                        List<String> informations = new ArrayList<>();
+                        ajouterInformation(
+                                        informations,
+                                        "Prix",
+                                        objet.getPrix());
+                        ajouterInformation(
+                                        informations,
+                                        "Usage",
+                                        objet.getEmplacement());
+
+                        details = String.join(
+                                        " | ",
+                                        informations);
                 }
 
                 afficherFondPour(carte);
@@ -338,8 +421,21 @@ public class CardPreviewPane extends Pane {
                                 details);
         }
 
-        private String valeurOuVide(String valeur) {
-                return valeur == null ? "" : valeur;
+        /**
+         * Ajoute une information légendée uniquement lorsque sa valeur est
+         * réellement renseignée.
+         */
+        private void ajouterInformation(
+                        List<String> informations,
+                        String libelle,
+                        String valeur) {
+
+                if (valeur != null && !valeur.isBlank()) {
+                        informations.add(
+                                        libelle
+                                                        + " : "
+                                                        + valeur);
+                }
         }
 
         private String symboleAction(

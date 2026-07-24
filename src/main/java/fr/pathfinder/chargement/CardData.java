@@ -29,6 +29,7 @@ public class CardData {
      */
     public List<String> traditions;
 
+    @JsonAlias({"traitsObjet", "traitsCapacite"})
     public String traits;
 
     public String coutIncantation;
@@ -47,15 +48,11 @@ public class CardData {
 
     public String prixObjet;
 
-    public String traitsObjet;
-
     public String activationObjet;
 
     /*
      * Champs spécifiques aux capacités / dons.
      */
-    public String traitsCapacite;
-
     public String prerequis;
 
     public String declencheur;

@@ -88,7 +88,7 @@ public class CardSaver {
 
                     data.prixObjet = objet.getPrix();
 
-                    data.traitsObjet = objet.getTraits();
+                    data.traits = objet.getTraits();
 
                     if (objet.getActivation() != null) {
 
@@ -100,7 +100,7 @@ public class CardSaver {
 
                     data.type = "CAPACITE";
 
-                    data.traitsCapacite = capacite.getTraits();
+                    data.traits = capacite.getTraits();
                     data.prerequis = capacite.getPrerequis();
                     data.declencheur = capacite.getDeclencheur();
 

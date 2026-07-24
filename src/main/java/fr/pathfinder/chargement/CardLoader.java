@@ -117,7 +117,7 @@ public class CardLoader {
                                 data.prixObjet);
 
                         objet.setTraits(
-                                data.traitsObjet);
+                                data.traits);
 
                         if (data.activationObjet != null) {
 
@@ -139,7 +139,7 @@ public class CardLoader {
                                 null);
 
                         capacite.setTraits(
-                                data.traitsCapacite);
+                                data.traits);
 
                         capacite.setPrerequis(
                                 data.prerequis);
