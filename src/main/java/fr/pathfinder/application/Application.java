@@ -28,7 +28,7 @@ public class Application {
 
         System.out.println("=================================");
         System.out.println(" Pathfinder Card Studio");
-        System.out.println(" Version 0.1.0");
+        System.out.println(" Version 0.4.0");
         System.out.println(" Forge initialisee");
         System.out.println("=================================");
     }
