@@ -62,5 +62,26 @@
     "prerequis" : "zzzzzzzzz",
     "declencheur" : "eeeeeeeee",
     "coutAction" : "DEUX_ACTIONS"
+  }, {
+    "type" : "SORT",
+    "nom" : "L'Elfe mange des cailloux",
+    "niveau" : 1,
+    "description" : "L'Elfe vient, il attrape un caillou et il le mange devant Tourgrim qui a le seum. \n\nFonctionne aussi avec tous objets de métal ou de pierre que Tourgrim porte ou possède",
+    "ecole" : "",
+    "traditions" : [ "PRIMORDIALE" ],
+    "traits" : "Cailloux",
+    "coutIncantation" : "REACTION",
+    "defense" : "CLASSE_ARMURE",
+    "portee" : "Contact",
+    "duree" : "Instantanné",
+    "emplacement" : null,
+    "prixObjet" : null,
+    "traitsObjet" : null,
+    "activationObjet" : null,
+    "actions" : null,
+    "traitsCapacite" : null,
+    "prerequis" : null,
+    "declencheur" : null,
+    "coutAction" : null
   } ]
 }
