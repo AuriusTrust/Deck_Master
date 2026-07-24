@@ -31,6 +31,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -679,6 +680,11 @@ public class PathfinderCardStudioApp extends Application {
                 listeImpression.setPrefHeight(180);
 
                 Scene scene = new Scene(root, 1450, 750);
+
+                stage.getIcons().add(
+                                new Image(
+                                                getClass().getResourceAsStream(
+                                                                "/assets/icons/icone_application.png")));
 
                 stage.setTitle(
                                 "Pathfinder Card Studio");
