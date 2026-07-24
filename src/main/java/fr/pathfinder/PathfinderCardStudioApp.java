@@ -1,5 +1,8 @@
 package fr.pathfinder;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import fr.pathfinder.carte.AbilityCard;
 import fr.pathfinder.carte.Card;
 import fr.pathfinder.carte.Deck;
@@ -560,7 +563,12 @@ public class PathfinderCardStudioApp extends Application {
                                         "Exporter le deck en PDF");
 
                         selecteurFichier.setInitialFileName(
-                                        "deck-impression.pdf");
+                                        "deck-impression-"
+                                                        + LocalDateTime.now()
+                                                                        .format(
+                                                                                        DateTimeFormatter.ofPattern(
+                                                                                                        "yyyy-MM-dd_HH-mm-ss"))
+                                                        + ".pdf");
 
                         selecteurFichier.getExtensionFilters().add(
                                         new FileChooser.ExtensionFilter(

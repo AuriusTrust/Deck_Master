@@ -136,7 +136,7 @@ public class CardLoader {
                                 data.nom,
                                 data.niveau,
                                 data.description,
-                                data.actions);
+                                null);
 
                         capacite.setTraits(
                                 data.traitsCapacite);
@@ -147,12 +147,9 @@ public class CardLoader {
                         capacite.setDeclencheur(
                                 data.declencheur);
 
-                        if (data.coutAction != null) {
-
-                            capacite.setCoutAction(
-                                    ActionCost.valueOf(
-                                            data.coutAction));
-                        }
+                        capacite.setCoutAction(
+                                convertirCoutAction(
+                                        data.coutAction));
 
                         deck.ajouterCarte(capacite);
 
@@ -171,5 +168,22 @@ public class CardLoader {
         }
 
         return deck;
+    }
+
+    /**
+     * Convertit le coût sérialisé d'une capacité sans interrompre le
+     * chargement lorsqu'un ancien fichier contient une valeur inconnue.
+     */
+    private ActionCost convertirCoutAction(String valeur) {
+
+        if (valeur == null || valeur.isBlank()) {
+            return ActionCost.AUCUNE;
+        }
+
+        try {
+            return ActionCost.valueOf(valeur);
+        } catch (IllegalArgumentException exception) {
+            return ActionCost.AUCUNE;
+        }
     }
 }

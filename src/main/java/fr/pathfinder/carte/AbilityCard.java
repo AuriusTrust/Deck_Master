@@ -96,13 +96,6 @@ public class AbilityCard extends Card {
         this.coutAction = coutAction;
     }
 
-    /*
-     * Méthode temporairement conservée pour CardSaver.
-     */
-    public String getNombreActions() {
-        return coutAction.name();
-    }
-
     @Override
     public String afficherDetails() {
 

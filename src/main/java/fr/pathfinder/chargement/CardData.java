@@ -2,6 +2,8 @@ package fr.pathfinder.chargement;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 /**
  * Représentation sérialisable d'une carte dans le fichier JSON.
  *
@@ -52,13 +54,12 @@ public class CardData {
     /*
      * Champs spécifiques aux capacités / dons.
      */
-    public String actions;
-
     public String traitsCapacite;
 
     public String prerequis;
 
     public String declencheur;
 
+    @JsonAlias("actions")
     public String coutAction;
 }
