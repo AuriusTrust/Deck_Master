@@ -14,6 +14,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
+import fr.pathfinder.affichage.javafx.CardBackPreviewPane;
 import fr.pathfinder.affichage.javafx.CardPreviewPane;
 import fr.pathfinder.carte.Card;
 import javafx.application.Platform;
@@ -21,11 +22,12 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 /**
- * Exporte le rendu recto du deck d'impression dans un document PDF A4.
+ * Exporte les rectos et versos du deck d'impression dans un document PDF A4.
  */
 public class PdfExporter {
 
@@ -41,7 +43,9 @@ public class PdfExporter {
     private static final double HAUTEUR_APERCU = 490;
 
     /**
-     * Génère un PDF contenant jusqu'à neuf cartes par page.
+     * Génère un PDF recto-verso contenant jusqu'à neuf cartes par page.
+     * Chaque page recto est immédiatement suivie de son verso en miroir
+     * horizontal pour une impression retournée sur le grand côté.
      *
      * @param printDeck deck et quantités à exporter
      * @param sortie fichier PDF de destination
@@ -81,7 +85,12 @@ public class PdfExporter {
                     debutPage < cartesAImprimer.size();
                     debutPage += CARTES_PAR_PAGE) {
 
-                ajouterPage(
+                ajouterPageRecto(
+                        document,
+                        cartesAImprimer,
+                        debutPage);
+
+                ajouterPageVerso(
                         document,
                         cartesAImprimer,
                         debutPage);
@@ -107,10 +116,35 @@ public class PdfExporter {
         return cartes;
     }
 
-    private void ajouterPage(
+    private void ajouterPageRecto(
             PDDocument document,
             List<Card> cartes,
             int debutPage) throws IOException {
+
+        ajouterPage(
+                document,
+                cartes,
+                debutPage,
+                false);
+    }
+
+    private void ajouterPageVerso(
+            PDDocument document,
+            List<Card> cartes,
+            int debutPage) throws IOException {
+
+        ajouterPage(
+                document,
+                cartes,
+                debutPage,
+                true);
+    }
+
+    private void ajouterPage(
+            PDDocument document,
+            List<Card> cartes,
+            int debutPage,
+            boolean verso) throws IOException {
 
         PDPage page = new PDPage(PDRectangle.A4);
         document.addPage(page);
@@ -142,6 +176,10 @@ public class PdfExporter {
                 int colonne = positionPage % COLONNES;
                 int ligne = positionPage / COLONNES;
 
+                if (verso) {
+                    colonne = calculerColonneVerso(colonne);
+                }
+
                 float x = MARGE
                         + colonne * (largeurCarte + ESPACEMENT);
 
@@ -150,8 +188,9 @@ public class PdfExporter {
                         - hauteurCarte
                         - ligne * (hauteurCarte + ESPACEMENT);
 
-                BufferedImage imageCarte = capturerCarte(
-                        cartes.get(index));
+                BufferedImage imageCarte = verso
+                        ? capturerVerso(cartes.get(index))
+                        : capturerRecto(cartes.get(index));
 
                 PDImageXObject imagePdf = LosslessFactory.createFromImage(
                         document,
@@ -167,14 +206,31 @@ public class PdfExporter {
         }
     }
 
-    private BufferedImage capturerCarte(Card carte) {
+    private int calculerColonneVerso(int colonneRecto) {
+        return COLONNES - 1 - colonneRecto;
+    }
+
+    private BufferedImage capturerRecto(Card carte) {
 
         CardPreviewPane apercu = new CardPreviewPane();
         apercu.afficherCarte(carte);
 
+        return capturerApercu(apercu);
+    }
+
+    private BufferedImage capturerVerso(Card carte) {
+
+        CardBackPreviewPane apercu = new CardBackPreviewPane();
+        apercu.afficherVerso(carte);
+
+        return capturerApercu(apercu);
+    }
+
+    private BufferedImage capturerApercu(Pane apercu) {
+
         /*
-         * Les textes de CardPreviewPane sont des contrôles Label. Leur skin
-         * n'est créé par JavaFX que lorsqu'ils appartiennent à une Scene.
+         * Les textes des aperçus utilisent des contrôles JavaFX. Leur skin
+         * n'est créé correctement que lorsqu'ils appartiennent à une Scene.
          * Cette scène reste entièrement hors écran et sert uniquement à
          * préparer correctement le nœud avant sa capture.
          */
