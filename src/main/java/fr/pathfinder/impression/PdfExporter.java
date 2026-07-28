@@ -35,9 +35,10 @@ public class PdfExporter {
     private static final int LIGNES = 3;
     private static final int CARTES_PAR_PAGE = COLONNES * LIGNES;
 
-    private static final float MARGE = 20;
-    private static final float ESPACEMENT = 4;
-    private static final float RATIO_CARTE = 490f / 350f;
+    private static final float POINTS_PAR_MM = 72f / 25.4f;
+    private static final float LARGEUR_CARTE_MM = 63.5f;
+    private static final float HAUTEUR_CARTE_MM = 88.9f;
+    private static final float ESPACEMENT_MM = 2f;
 
     private static final double LARGEUR_APERCU = 350;
     private static final double HAUTEUR_APERCU = 490;
@@ -152,13 +153,24 @@ public class PdfExporter {
         float largeurPage = page.getMediaBox().getWidth();
         float hauteurPage = page.getMediaBox().getHeight();
 
-        float largeurCarte = (
-                largeurPage
-                        - 2 * MARGE
-                        - (COLONNES - 1) * ESPACEMENT)
-                / COLONNES;
+        float largeurCarte =
+                LARGEUR_CARTE_MM * POINTS_PAR_MM;
+        float hauteurCarte =
+                HAUTEUR_CARTE_MM * POINTS_PAR_MM;
+        float espacement =
+                ESPACEMENT_MM * POINTS_PAR_MM;
 
-        float hauteurCarte = largeurCarte * RATIO_CARTE;
+        float largeurGrille =
+                COLONNES * largeurCarte
+                        + (COLONNES - 1) * espacement;
+        float hauteurGrille =
+                LIGNES * hauteurCarte
+                        + (LIGNES - 1) * espacement;
+
+        float origineX =
+                (largeurPage - largeurGrille) / 2;
+        float origineY =
+                (hauteurPage - hauteurGrille) / 2;
 
         try (PDPageContentStream contenu = new PDPageContentStream(
                 document,
@@ -180,13 +192,12 @@ public class PdfExporter {
                     colonne = calculerColonneVerso(colonne);
                 }
 
-                float x = MARGE
-                        + colonne * (largeurCarte + ESPACEMENT);
+                float x = origineX
+                        + colonne * (largeurCarte + espacement);
 
-                float y = hauteurPage
-                        - MARGE
-                        - hauteurCarte
-                        - ligne * (hauteurCarte + ESPACEMENT);
+                float y = origineY
+                        + (LIGNES - 1 - ligne)
+                        * (hauteurCarte + espacement);
 
                 BufferedImage imageCarte = verso
                         ? capturerVerso(cartes.get(index))
