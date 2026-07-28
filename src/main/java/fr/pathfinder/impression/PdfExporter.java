@@ -25,6 +25,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
 
 /**
  * Exporte les rectos et versos du deck d'impression dans un document PDF A4.
@@ -42,6 +43,8 @@ public class PdfExporter {
 
     private static final double LARGEUR_APERCU = 350;
     private static final double HAUTEUR_APERCU = 490;
+    private static final double FACTEUR_ECHELLE_CAPTURE =
+            750d / LARGEUR_APERCU;
 
     /**
      * Génère un PDF recto-verso contenant jusqu'à neuf cartes par page.
@@ -277,6 +280,9 @@ public class PdfExporter {
 
         SnapshotParameters parametres = new SnapshotParameters();
         parametres.setFill(Color.TRANSPARENT);
+        parametres.setTransform(new Scale(
+                FACTEUR_ECHELLE_CAPTURE,
+                FACTEUR_ECHELLE_CAPTURE));
 
         WritableImage capture = apercu.snapshot(
                 parametres,
