@@ -50,6 +50,10 @@ public class PdfExporter {
     private static final float OFFSET_VERSO_Y_POINTS =
             OFFSET_VERSO_Y_MM * POINTS_PAR_MM;
 
+    private static final float RETRAIT_TRAIT_COUPE_MM = 0.25f;
+    private static final float LONGUEUR_TRAIT_COUPE_MM = 0.7f;
+    private static final float EPAISSEUR_TRAIT_COUPE = 0.5f;
+
     private static final double LARGEUR_APERCU = 350;
     private static final double HAUTEUR_APERCU = 490;
     private static final double FACTEUR_ECHELLE_CAPTURE =
@@ -243,6 +247,13 @@ public class PdfExporter {
                 largeurCarte,
                 hauteurCarte);
         contenu.stroke();
+
+        dessinerTraitsCoupe(
+                contenu,
+                x,
+                y,
+                largeurCarte,
+                hauteurCarte);
 
         ecrireTexteCalibration(
                 contenu,
@@ -460,8 +471,101 @@ public class PdfExporter {
                         y,
                         largeurCarte,
                         hauteurCarte);
+
+                dessinerTraitsCoupe(
+                        contenu,
+                        x,
+                        y,
+                        largeurCarte,
+                        hauteurCarte);
             }
         }
+    }
+
+    private void dessinerTraitsCoupe(
+            PDPageContentStream contenu,
+            float x,
+            float y,
+            float largeurCarte,
+            float hauteurCarte) throws IOException {
+
+        float retrait =
+                RETRAIT_TRAIT_COUPE_MM * POINTS_PAR_MM;
+        float longueur =
+                LONGUEUR_TRAIT_COUPE_MM * POINTS_PAR_MM;
+        float gauche = x;
+        float droite = x + largeurCarte;
+        float bas = y;
+        float haut = y + hauteurCarte;
+
+        contenu.setStrokingColor(0, 0, 0);
+        contenu.setLineWidth(EPAISSEUR_TRAIT_COUPE);
+
+        ajouterTraitHorizontal(
+                contenu,
+                gauche - retrait - longueur,
+                gauche - retrait,
+                bas);
+        ajouterTraitVertical(
+                contenu,
+                gauche,
+                bas - retrait - longueur,
+                bas - retrait);
+
+        ajouterTraitHorizontal(
+                contenu,
+                droite + retrait,
+                droite + retrait + longueur,
+                bas);
+        ajouterTraitVertical(
+                contenu,
+                droite,
+                bas - retrait - longueur,
+                bas - retrait);
+
+        ajouterTraitHorizontal(
+                contenu,
+                gauche - retrait - longueur,
+                gauche - retrait,
+                haut);
+        ajouterTraitVertical(
+                contenu,
+                gauche,
+                haut + retrait,
+                haut + retrait + longueur);
+
+        ajouterTraitHorizontal(
+                contenu,
+                droite + retrait,
+                droite + retrait + longueur,
+                haut);
+        ajouterTraitVertical(
+                contenu,
+                droite,
+                haut + retrait,
+                haut + retrait + longueur);
+
+        contenu.stroke();
+    }
+
+    private void ajouterTraitHorizontal(
+            PDPageContentStream contenu,
+            float debutX,
+            float finX,
+            float y) throws IOException {
+
+        contenu.moveTo(debutX, y);
+        contenu.lineTo(finX, y);
+    }
+
+    private void ajouterTraitVertical(
+            PDPageContentStream contenu,
+            float x,
+            float debutY,
+            float finY) throws IOException {
+
+        contenu.moveTo(x, debutY);
+        contenu.lineTo(x, finY);
     }
 
     private int calculerColonneVerso(int colonneRecto) {
