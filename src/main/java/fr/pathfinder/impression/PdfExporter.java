@@ -42,6 +42,13 @@ public class PdfExporter {
     private static final float LARGEUR_CARTE_MM = 63.5f;
     private static final float HAUTEUR_CARTE_MM = 88.9f;
     private static final float ESPACEMENT_MM = 2f;
+    private static final float OFFSET_VERSO_X_MM = 0f;
+    private static final float OFFSET_VERSO_Y_MM = 0f;
+
+    private static final float OFFSET_VERSO_X_POINTS =
+            OFFSET_VERSO_X_MM * POINTS_PAR_MM;
+    private static final float OFFSET_VERSO_Y_POINTS =
+            OFFSET_VERSO_Y_MM * POINTS_PAR_MM;
 
     private static final double LARGEUR_APERCU = 350;
     private static final double HAUTEUR_APERCU = 490;
@@ -200,6 +207,11 @@ public class PdfExporter {
                 float y = origineY
                         + (LIGNES - 1 - ligne)
                         * (hauteurCarte + espacement);
+
+                if (verso) {
+                    x += OFFSET_VERSO_X_POINTS;
+                    y += OFFSET_VERSO_Y_POINTS;
+                }
 
                 dessinerCarteCalibration(
                         contenu,
@@ -428,6 +440,11 @@ public class PdfExporter {
                 float y = origineY
                         + (LIGNES - 1 - ligne)
                         * (hauteurCarte + espacement);
+
+                if (verso) {
+                    x += OFFSET_VERSO_X_POINTS;
+                    y += OFFSET_VERSO_Y_POINTS;
+                }
 
                 BufferedImage imageCarte = verso
                         ? capturerVerso(cartes.get(index))
