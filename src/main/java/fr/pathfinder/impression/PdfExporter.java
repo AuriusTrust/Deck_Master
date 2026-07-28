@@ -11,6 +11,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
@@ -102,6 +104,231 @@ public class PdfExporter {
 
             document.save(cheminAbsolu.toFile());
         }
+    }
+
+    /**
+     * Génère un gabarit recto-verso permettant de contrôler l'orientation,
+     * les dimensions et l'alignement physique de la grille d'impression.
+     *
+     * @param sortie fichier PDF de calibration à générer
+     * @throws IOException si le fichier ne peut pas être écrit
+     */
+    public void exporterCalibration(
+            Path sortie) throws IOException {
+
+        if (sortie == null) {
+            throw new IllegalArgumentException(
+                    "Le chemin de sortie est obligatoire.");
+        }
+
+        Path cheminAbsolu = sortie.toAbsolutePath();
+        Path dossierParent = cheminAbsolu.getParent();
+
+        if (dossierParent != null) {
+            Files.createDirectories(dossierParent);
+        }
+
+        try (PDDocument document = new PDDocument()) {
+            ajouterPageCalibration(document, false);
+            ajouterPageCalibration(document, true);
+            document.save(cheminAbsolu.toFile());
+        }
+    }
+
+    private void ajouterPageCalibration(
+            PDDocument document,
+            boolean verso) throws IOException {
+
+        PDPage page = new PDPage(PDRectangle.A4);
+        document.addPage(page);
+
+        float largeurPage = page.getMediaBox().getWidth();
+        float hauteurPage = page.getMediaBox().getHeight();
+
+        float largeurCarte =
+                LARGEUR_CARTE_MM * POINTS_PAR_MM;
+        float hauteurCarte =
+                HAUTEUR_CARTE_MM * POINTS_PAR_MM;
+        float espacement =
+                ESPACEMENT_MM * POINTS_PAR_MM;
+
+        float largeurGrille =
+                COLONNES * largeurCarte
+                        + (COLONNES - 1) * espacement;
+        float hauteurGrille =
+                LIGNES * hauteurCarte
+                        + (LIGNES - 1) * espacement;
+
+        float origineX =
+                (largeurPage - largeurGrille) / 2;
+        float origineY =
+                (hauteurPage - hauteurGrille) / 2;
+
+        PDType1Font policeNormale = new PDType1Font(
+                Standard14Fonts.FontName.HELVETICA);
+        PDType1Font policeGrasse = new PDType1Font(
+                Standard14Fonts.FontName.HELVETICA_BOLD);
+
+        try (PDPageContentStream contenu = new PDPageContentStream(
+                document,
+                page)) {
+
+            ecrireTexteCalibration(
+                    contenu,
+                    policeGrasse,
+                    12,
+                    origineX,
+                    hauteurPage - 18,
+                    verso
+                            ? "CALIBRATION VERSO - BORD LONG"
+                            : "CALIBRATION RECTO");
+
+            for (int position = 0;
+                    position < CARTES_PAR_PAGE;
+                    position++) {
+
+                int numeroCarte = position + 1;
+                int colonne = position % COLONNES;
+                int ligne = position / COLONNES;
+
+                if (verso) {
+                    colonne = calculerColonneVerso(colonne);
+                }
+
+                float x = origineX
+                        + colonne * (largeurCarte + espacement);
+                float y = origineY
+                        + (LIGNES - 1 - ligne)
+                        * (hauteurCarte + espacement);
+
+                dessinerCarteCalibration(
+                        contenu,
+                        policeNormale,
+                        policeGrasse,
+                        numeroCarte,
+                        x,
+                        y,
+                        largeurCarte,
+                        hauteurCarte);
+            }
+        }
+    }
+
+    private void dessinerCarteCalibration(
+            PDPageContentStream contenu,
+            PDType1Font policeNormale,
+            PDType1Font policeGrasse,
+            int numeroCarte,
+            float x,
+            float y,
+            float largeurCarte,
+            float hauteurCarte) throws IOException {
+
+        contenu.setLineWidth(2.5f);
+        contenu.addRect(
+                x,
+                y,
+                largeurCarte,
+                hauteurCarte);
+        contenu.stroke();
+
+        ecrireTexteCalibration(
+                contenu,
+                policeGrasse,
+                24,
+                x + 10,
+                y + hauteurCarte - 30,
+                Integer.toString(numeroCarte));
+
+        float centreX = x + largeurCarte / 2;
+        float centreY = y + hauteurCarte / 2;
+        float tailleRepere = 7;
+
+        contenu.setLineWidth(1.5f);
+        contenu.moveTo(
+                centreX - tailleRepere,
+                centreY);
+        contenu.lineTo(
+                centreX + tailleRepere,
+                centreY);
+        contenu.moveTo(
+                centreX,
+                centreY - tailleRepere);
+        contenu.lineTo(
+                centreX,
+                centreY + tailleRepere);
+        contenu.stroke();
+
+        float baseFleche = y + hauteurCarte * 0.58f;
+        float sommetFleche = y + hauteurCarte * 0.79f;
+        float demiPointe = 13;
+
+        contenu.setLineWidth(4);
+        contenu.moveTo(
+                centreX,
+                baseFleche);
+        contenu.lineTo(
+                centreX,
+                sommetFleche);
+        contenu.moveTo(
+                centreX,
+                sommetFleche);
+        contenu.lineTo(
+                centreX - demiPointe,
+                sommetFleche - demiPointe);
+        contenu.moveTo(
+                centreX,
+                sommetFleche);
+        contenu.lineTo(
+                centreX + demiPointe,
+                sommetFleche - demiPointe);
+        contenu.stroke();
+
+        ecrireTexteCalibration(
+                contenu,
+                policeGrasse,
+                11,
+                centreX - 15,
+                baseFleche - 16,
+                "HAUT");
+
+        ecrireTexteCalibration(
+                contenu,
+                policeNormale,
+                8,
+                x + 8,
+                y + 23,
+                String.format(
+                        java.util.Locale.ROOT,
+                        "X = %.2f pt (%.2f mm)",
+                        x,
+                        x / POINTS_PAR_MM));
+        ecrireTexteCalibration(
+                contenu,
+                policeNormale,
+                8,
+                x + 8,
+                y + 11,
+                String.format(
+                        java.util.Locale.ROOT,
+                        "Y = %.2f pt (%.2f mm)",
+                        y,
+                        y / POINTS_PAR_MM));
+    }
+
+    private void ecrireTexteCalibration(
+            PDPageContentStream contenu,
+            PDType1Font police,
+            float taille,
+            float x,
+            float y,
+            String texte) throws IOException {
+
+        contenu.beginText();
+        contenu.setFont(police, taille);
+        contenu.newLineAtOffset(x, y);
+        contenu.showText(texte);
+        contenu.endText();
     }
 
     private List<Card> developperQuantites(PrintDeck printDeck) {
