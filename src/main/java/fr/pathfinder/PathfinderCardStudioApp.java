@@ -20,6 +20,7 @@ import fr.pathfinder.affichage.javafx.CardPreviewPane;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -141,6 +142,23 @@ public class PathfinderCardStudioApp extends Application {
                 Button boutonDecrementerImpression = new Button("-");
                 Button boutonRetirerImpression = new Button("Retirer du deck");
                 Button boutonExporterPdf = new Button("Exporter PDF");
+                Button boutonCalibrationRectoVerso = new Button(
+                                "Calibration recto-verso");
+
+                Label compteurDeckImpression = new Label("0 cartes — 0 pages");
+
+                Runnable actualiserCompteurDeckImpression = () -> {
+                        int nombreCartes = printDeck.taille();
+                        int nombrePages = nombreCartes == 0
+                                        ? 0
+                                        : ((nombreCartes + 8) / 9) * 2;
+
+                        compteurDeckImpression.setText(
+                                        nombreCartes
+                                                        + " cartes — "
+                                                        + nombrePages
+                                                        + " pages");
+                };
 
                 boutonIncrementerImpression.setDisable(true);
                 boutonDecrementerImpression.setDisable(true);
@@ -475,6 +493,8 @@ public class PathfinderCardStudioApp extends Application {
                                         printDeck.getEntrees());
 
                         listeImpression.refresh();
+
+                        actualiserCompteurDeckImpression.run();
                 });
 
                 /*
@@ -500,6 +520,8 @@ public class PathfinderCardStudioApp extends Application {
                                         entreeSelectionnee);
 
                         listeImpression.refresh();
+
+                        actualiserCompteurDeckImpression.run();
                 });
 
                 /*
@@ -527,6 +549,8 @@ public class PathfinderCardStudioApp extends Application {
                         }
 
                         listeImpression.refresh();
+
+                        actualiserCompteurDeckImpression.run();
                 });
 
                 /*
@@ -549,6 +573,8 @@ public class PathfinderCardStudioApp extends Application {
                                         printDeck.getEntrees());
 
                         listeImpression.refresh();
+
+                        actualiserCompteurDeckImpression.run();
                 });
 
                 /*
@@ -585,6 +611,60 @@ public class PathfinderCardStudioApp extends Application {
                         try {
                                 pdfExporter.exporter(
                                                 printDeck,
+                                                fichierSortie.toPath());
+
+                                Alert confirmation = new Alert(
+                                                Alert.AlertType.INFORMATION);
+
+                                confirmation.setTitle("Export PDF");
+                                confirmation.setHeaderText(
+                                                "Export terminé");
+                                confirmation.setContentText(
+                                                fichierSortie.getAbsolutePath());
+                                confirmation.showAndWait();
+
+                        } catch (Exception exception) {
+
+                                Alert erreur = new Alert(
+                                                Alert.AlertType.ERROR);
+
+                                erreur.setTitle("Export PDF");
+                                erreur.setHeaderText(
+                                                "Impossible de générer le PDF");
+                                erreur.setContentText(
+                                                exception.getMessage());
+                                erreur.showAndWait();
+                        }
+                });
+
+                /*
+                 * Génère le gabarit utilisé pour contrôler l'alignement
+                 * physique des impressions recto-verso.
+                 */
+                boutonCalibrationRectoVerso.setOnAction(event -> {
+
+                        FileChooser selecteurFichier = new FileChooser();
+
+                        selecteurFichier.setTitle(
+                                        "Exporter la calibration recto-verso");
+
+                        selecteurFichier.setInitialFileName(
+                                        "calibration-recto-verso.pdf");
+
+                        selecteurFichier.getExtensionFilters().add(
+                                        new FileChooser.ExtensionFilter(
+                                                        "Document PDF",
+                                                        "*.pdf"));
+
+                        java.io.File fichierSortie = selecteurFichier
+                                        .showSaveDialog(stage);
+
+                        if (fichierSortie == null) {
+                                return;
+                        }
+
+                        try {
+                                pdfExporter.exporterCalibration(
                                                 fichierSortie.toPath());
 
                                 Alert confirmation = new Alert(
@@ -660,6 +740,14 @@ public class PathfinderCardStudioApp extends Application {
                                 boutonDecrementerImpression,
                                 boutonRetirerImpression);
 
+                HBox actionsExportPdf = new HBox(
+                                10,
+                                boutonExporterPdf,
+                                boutonCalibrationRectoVerso,
+                                compteurDeckImpression);
+
+                actionsExportPdf.setAlignment(Pos.CENTER_LEFT);
+
                 /*
                  * En-tête du deck : titre à gauche et actions à droite.
                  */
@@ -678,7 +766,7 @@ public class PathfinderCardStudioApp extends Application {
                                 10,
                                 enteteDeckImpression,
                                 listeImpression,
-                                boutonExporterPdf);
+                                actionsExportPdf);
 
                 panneauDeckImpression.setPrefWidth(380);
                 panneauDeckImpression.setMinWidth(380);
